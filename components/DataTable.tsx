@@ -168,14 +168,18 @@ export function DataTable<T extends Record<string, any>>({
     // Equipment chips
     if (key === "equipment") {
       let items: string[] = [];
-      try {
-        const parsed = JSON.parse(value);
-        if (Array.isArray(parsed)) items = parsed;
-      } catch {
-        items = String(value)
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean);
+      if (Array.isArray(value)) {
+        items = value;
+      } else {
+        try {
+          const parsed = JSON.parse(value);
+          if (Array.isArray(parsed)) items = parsed;
+        } catch {
+          items = String(value)
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
+        }
       }
 
       if (items.length === 0) return <span className="text-zinc-500">—</span>;
