@@ -20,7 +20,7 @@ export default function EventsPage() {
               if (refresh) setRefreshFn(() => refresh);
               setSelectedEvent(event);
             }}
-            className="px-2.5 py-1 text-xs font-medium rounded bg-indigo-950/60 text-indigo-300 hover:bg-indigo-900/80 hover:text-white border border-indigo-800/80 transition-colors"
+            className="btn-secondary-pill px-3 py-1 text-xs"
           >
             Register
           </button>

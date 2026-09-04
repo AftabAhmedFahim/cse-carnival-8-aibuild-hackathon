@@ -216,8 +216,8 @@ export function DataTable<T extends Record<string, any>>({
       {/* Table Top Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold text-zinc-100 tracking-tight">{config.title}</h2>
-          <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
+          <h2 className="text-xl font-bold text-white tracking-tight">{config.title}</h2>
+          <span className="px-3 py-0.5 text-xs font-semibold rounded-full bg-[#28282a] text-[#8e8e8e] border border-[rgba(255,255,255,0.08)]">
             {data.length} {data.length === 1 ? "record" : "records"}
           </span>
         </div>
@@ -229,10 +229,10 @@ export function DataTable<T extends Record<string, any>>({
               placeholder="Search in table..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-48 sm:w-64 pl-9 pr-3 py-1.5 text-sm rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+              className="w-48 sm:w-64 pl-9 pr-3 py-1.5 text-sm rounded-full bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white/40 transition-colors"
             />
             <svg
-              className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5 pointer-events-none"
+              className="w-4 h-4 text-[#8e8e8e] absolute left-3.5 top-2.5 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -250,10 +250,10 @@ export function DataTable<T extends Record<string, any>>({
 
           <button
             onClick={onAdd}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 active:scale-95"
+            className="btn-primary-pill gap-1.5 px-4 py-2 text-sm focus:outline-none"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
             </svg>
             Add new
           </button>
@@ -271,14 +271,14 @@ export function DataTable<T extends Record<string, any>>({
           onAction={onAdd}
         />
       ) : filteredData.length === 0 ? (
-        <div className="text-center py-12 border border-zinc-800 rounded-xl bg-zinc-900/20 text-zinc-400">
+        <div className="text-center py-12 border border-[rgba(255,255,255,0.08)] rounded-2xl bg-[#0d0d0d] text-[#8e8e8e]">
           No records match your search criteria &quot;{searchTerm}&quot;.
         </div>
       ) : (
-        <div className="border border-zinc-800 rounded-xl overflow-hidden bg-zinc-900/40 shadow-sm">
+        <div className="border border-[rgba(255,255,255,0.08)] rounded-2xl overflow-hidden bg-[#0d0d0d] shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-zinc-900/90 text-xs font-semibold text-zinc-400 uppercase tracking-wider border-b border-zinc-800">
+              <thead className="bg-[#141416] text-xs font-semibold text-[#8e8e8e] uppercase tracking-wider border-b border-[rgba(255,255,255,0.08)]">
                 <tr>
                   {config.fields.map((field) => (
                     <th key={field.key} scope="col" className="px-5 py-3.5 whitespace-nowrap">
@@ -290,13 +290,13 @@ export function DataTable<T extends Record<string, any>>({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/70">
+              <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
                 {filteredData.map((record, index) => {
                   const id = record[config.idKey] || `row-${index}`;
                   return (
                     <tr
                       key={id}
-                      className="hover:bg-zinc-800/30 transition-colors group"
+                      className="hover:bg-[#161618]/60 transition-colors group"
                     >
                       {config.fields.map((field) => (
                         <td
@@ -311,7 +311,7 @@ export function DataTable<T extends Record<string, any>>({
                           {customActions && customActions(record)}
                           <button
                             onClick={() => onEdit(record)}
-                            className="px-2.5 py-1 text-xs font-medium rounded bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 hover:text-white border border-zinc-700/50 transition-colors focus:outline-none"
+                            className="btn-secondary-pill px-3 py-1 text-xs"
                             title="Edit record"
                           >
                             Edit
@@ -322,7 +322,7 @@ export function DataTable<T extends Record<string, any>>({
                                 onDelete(record);
                               }
                             }}
-                            className="px-2.5 py-1 text-xs font-medium rounded bg-rose-950/40 text-rose-300 hover:bg-rose-900/60 hover:text-rose-100 border border-rose-900/50 transition-colors focus:outline-none"
+                            className="px-3 py-1 text-xs font-medium rounded-full bg-rose-950/40 text-rose-300 hover:bg-rose-900/60 border border-rose-900/40 transition-colors shadow-[0_4px_14px_rgba(0,0,0,0.16)] focus:outline-none"
                             title="Delete record"
                           >
                             Delete

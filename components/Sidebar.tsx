@@ -69,16 +69,16 @@ export function Sidebar() {
   return (
     <>
       {/* Mobile Top Bar */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-zinc-950 border-b border-zinc-800 sticky top-0 z-30">
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-black border-b border-[rgba(255,255,255,0.08)] sticky top-0 z-30">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-black text-white text-base shadow-sm">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center font-black text-black text-sm shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
             C
           </div>
           <span className="font-bold text-base text-white tracking-tight">CampusOS</span>
         </div>
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white"
+          className="p-2 rounded-full bg-[#28282a] border border-[rgba(255,255,255,0.08)] text-[#8e8e8e] hover:text-white"
           aria-label="Toggle navigation menu"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -101,25 +101,25 @@ export function Sidebar() {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-zinc-950 border-r border-zinc-800 flex flex-col justify-between transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-black border-r border-[rgba(255,255,255,0.08)] flex flex-col justify-between transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="p-6">
           {/* Brand */}
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-white text-lg shadow-md shadow-indigo-600/30">
+            <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center font-black text-black text-base shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
               C
             </div>
             <div>
               <span className="font-bold text-lg text-white tracking-tight block">CampusOS</span>
-              <span className="text-[11px] text-zinc-400 block tracking-wide uppercase font-semibold">University Core</span>
+              <span className="text-[11px] text-[#8e8e8e] block tracking-wide uppercase font-semibold">University Core</span>
             </div>
           </div>
 
           {/* Navigation Links */}
           <div className="space-y-1">
-            <p className="px-3 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+            <p className="px-3 text-[11px] font-semibold text-[#8e8e8e] uppercase tracking-wider mb-2">
               Management
             </p>
             {NAV_ITEMS.map((item) => {
@@ -129,13 +129,13 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileOpen(false)}
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-indigo-600/15 text-indigo-400 font-semibold border border-indigo-500/20"
-                      : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
+                      ? "bg-[#28282a] text-white font-semibold border border-[rgba(255,255,255,0.08)] shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+                      : "text-[#8e8e8e] hover:text-white hover:bg-[#18181a]"
                   }`}
                 >
-                  <span className={isActive ? "text-indigo-400" : "text-zinc-500"}>
+                  <span className={isActive ? "text-white" : "text-[#8e8e8e]"}>
                     {item.icon}
                   </span>
                   <span>{item.label}</span>
@@ -146,12 +146,12 @@ export function Sidebar() {
         </div>
 
         {/* Footer / Status */}
-        <div className="p-4 border-t border-zinc-900 bg-zinc-950/80 m-3 rounded-xl border">
+        <div className="p-4 bg-[#0d0d0d] m-3 rounded-2xl border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center gap-2.5">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <div>
-              <p className="text-xs font-medium text-zinc-300">SQLite Connected</p>
-              <p className="text-[11px] text-zinc-400">Live Campus Database</p>
+              <p className="text-xs font-medium text-white">SQLite Connected</p>
+              <p className="text-[11px] text-[#8e8e8e]">Live Campus Database</p>
             </div>
           </div>
         </div>

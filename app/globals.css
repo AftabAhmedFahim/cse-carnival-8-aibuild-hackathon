@@ -1,42 +1,81 @@
-/* Global styling for CampusOS dashboard: dark theme, indigo accents, and clean typography. */
+/* Global styling for CampusOS dashboard: black theme, Inter typography, pill buttons, and subtle borders. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: #09090b;
-    --foreground: #f4f4f5;
-    --card: #121215;
-    --card-foreground: #f4f4f5;
-    --border: #27272a;
-    --accent: #6366f1;
-    --accent-foreground: #ffffff;
-    --muted: #18181b;
-    --muted-foreground: #a1a1aa;
+    --background: #000000;
+    --foreground: #ffffff;
+    --card: #0d0d0d;
+    --card-foreground: #ffffff;
+    --border: rgba(255, 255, 255, 0.08);
+    --muted: #8e8e8e;
+    --muted-foreground: #8e8e8e;
+    --secondary: #28282a;
+    --secondary-foreground: #ffffff;
+    --primary: #ffffff;
+    --primary-foreground: #000000;
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: #000000;
+    color: #ffffff;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
   }
 }
 
-/* Custom modern scrollbar for dark mode */
+/* Reusable pill buttons */
+.btn-primary-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  transition: all 0.15s ease-in-out;
+}
+.btn-primary-pill:hover {
+  background-color: #e5e5e5;
+  transform: translateY(-0.5px);
+}
+.btn-primary-pill:active {
+  transform: translateY(0.5px);
+}
+
+.btn-secondary-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background-color: #28282a;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 500;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  transition: all 0.15s ease-in-out;
+}
+.btn-secondary-pill:hover {
+  background-color: #38383c;
+  color: #ffffff;
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 9999px;
+  background: #28282a;
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
