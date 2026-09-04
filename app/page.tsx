@@ -1,84 +1,94 @@
-// CampusOS dashboard landing overview with quick links to all campus management sections.
+// app/page.tsx
+// Marketing landing page for CampusOS — single viewport, live database stats, and refined motion.
 import Link from "next/link";
+import { prisma } from "@/lib/db";
+import LandingHeader from "@/components/landing/LandingHeader";
+import StatsCounter, { type LiveStatsData } from "@/components/landing/StatsCounter";
 
-const SECTIONS = [
-  {
-    title: "Class Schedules",
-    href: "/schedules",
-    description: "View weekly timetables, classroom assignments, and faculty allocations.",
-    icon: "📅",
-    count: "24 classes",
-  },
-  {
-    title: "Rooms & Labs",
-    href: "/rooms",
-    description: "Track room availability, seat capacities, equipment, and reserve slots.",
-    icon: "🚪",
-    count: "20 rooms",
-  },
-  {
-    title: "Campus Events",
-    href: "/events",
-    description: "Manage seminars, workshops, attendee limits, and student registrations.",
-    icon: "🎟️",
-    count: "7 events",
-  },
-  {
-    title: "Announcements",
-    href: "/announcements",
-    description: "Publish high-priority notices, academic alerts, and departmental news.",
-    icon: "📢",
-    count: "8 notices",
-  },
-  {
-    title: "Assignments",
-    href: "/assignments",
-    description: "Track deadlines, marks distributions, and submission status across courses.",
-    icon: "📝",
-    count: "8 assignments",
-  },
-  {
-    title: "AI Campus Assistant",
-    href: "/chat",
-    description: "Ask natural language questions about schedules, rooms, and campus activities.",
-    icon: "💬",
-    count: "Live agent",
-  },
-];
+export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default async function LandingPage() {
+  // Fetch live stats from the SQLite database via Prisma
+  const [totalClasses, availableRooms, upcomingEvents, assignmentsDue] =
+    await Promise.all([
+      prisma.schedule.count(),
+      prisma.room.count({ where: { status: "available" } }),
+      prisma.event.count({ where: { status: "upcoming" } }),
+      prisma.assignment.count(),
+    ]);
+
+  const stats: LiveStatsData = {
+    totalClasses,
+    availableRooms,
+    upcomingEvents,
+    assignmentsDue,
+  };
+
   return (
-    <div className="p-6 sm:p-10 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-200">
-      <div className="space-y-2">
-        <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-          Welcome to <span className="text-white">CampusOS</span>
-        </h1>
-        <p className="text-[#8e8e8e] text-sm sm:text-base max-w-2xl">
-          Unified university operations platform. Select a module below to view live data, create
-          and edit records, or interact with campus resources.
-        </p>
+    <div className="relative min-h-screen lg:h-screen lg:max-h-screen lg:overflow-hidden bg-black text-white flex flex-col justify-between selection:bg-white selection:text-black">
+      {/* Subtle animated background radial gradient in deep purple/warm grey */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        <div
+          className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[850px] sm:w-[1100px] h-[550px] sm:h-[700px] rounded-full blur-[110px] opacity-70 animate-radial-drift"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(68, 36, 102, 0.18) 0%, rgba(45, 45, 52, 0.12) 45%, rgba(0, 0, 0, 0) 75%)",
+          }}
+        />
+        <div
+          className="absolute -bottom-[20%] right-1/4 w-[600px] h-[450px] rounded-full blur-[120px] opacity-40 animate-radial-drift"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(55, 30, 85, 0.15) 0%, rgba(35, 35, 42, 0.1) 50%, rgba(0, 0, 0, 0) 80%)",
+            animationDelay: "-10s",
+          }}
+        />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {SECTIONS.map((sec) => (
+      {/* Top Header */}
+      <LandingHeader />
+
+      {/* Hero Section — Centered, single viewport */}
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6 py-4 sm:py-6 max-w-4xl mx-auto w-full">
+        {/* Headline on two lines */}
+        <h1 className="font-display-headline text-white font-normal text-center tracking-[-0.04em] leading-[1.12] text-[clamp(28px,6.2vw,76px)] mb-5 select-none">
+          <span className="block animate-landing-line1">Your Campus.</span>
+          <span className="block animate-landing-line2">One Question Away.</span>
+        </h1>
+
+        {/* Subhead */}
+        <p className="animate-landing-subhead text-[#8e8e8e] text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-normal leading-relaxed mb-8 px-2">
+          Schedules, rooms, events, deadlines — managed in one place, with an AI agent
+          that reads live campus data and acts on it.
+        </p>
+
+        {/* CTAs */}
+        <div className="animate-landing-cta flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto">
+          {/* Primary CTA: White pill, black text, glowing shadow */}
           <Link
-            key={sec.href}
-            href={sec.href}
-            className="group block p-6 rounded-2xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.25)] hover:bg-[#141416] transition-all duration-200 shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+            href="/dashboard"
+            className="w-full sm:w-auto px-7 py-3 rounded-full bg-white text-black font-semibold text-sm transition-all duration-150 active:scale-95 glow-primary-cta hover:bg-[#f0f0f0] text-center"
           >
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-3xl">{sec.icon}</span>
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#28282a] text-[#8e8e8e] group-hover:text-white border border-[rgba(255,255,255,0.08)] transition-colors">
-                {sec.count}
-              </span>
-            </div>
-            <h2 className="text-lg font-bold text-white transition-colors">
-              {sec.title}
-            </h2>
-            <p className="text-xs text-[#8e8e8e] mt-1.5 leading-relaxed">{sec.description}</p>
+            Open Dashboard
           </Link>
-        ))}
-      </div>
+
+          {/* Secondary CTA: #28282a background, #c8c8c8 text, same pill shape */}
+          <Link
+            href="/dashboard/chat"
+            className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#28282a] text-[#c8c8c8] hover:text-white hover:bg-[#343438] border border-[rgba(255,255,255,0.08)] font-medium text-sm transition-all duration-150 active:scale-95 text-center shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+          >
+            Talk to the Agent
+          </Link>
+        </div>
+      </main>
+
+      {/* Stats row at the bottom */}
+      <footer className="relative z-10 w-full px-4 sm:px-6 pb-6 pt-2">
+        <StatsCounter stats={stats} />
+      </footer>
     </div>
   );
 }
