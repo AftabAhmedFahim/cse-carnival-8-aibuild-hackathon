@@ -236,19 +236,20 @@ export function validateBody(
 
   for (const [key, rawValue] of Object.entries(body)) {
     // `id` is accepted on create so seed-style ids ("evt-008") can be supplied,
-    // and rejected on update because changing a primary key breaks relations.
+    // and ignored on update (primary key cannot change and is in the route URL).
     if (key === "id") {
       if (mode === "update") {
-        return {
-          ok: false,
-          data,
-          error: "The 'id' field cannot be changed.",
-        };
+        continue;
       }
       if (typeof rawValue !== "string" || rawValue.trim() === "") {
         return { ok: false, data, error: "Field 'id' must be a non-empty string." };
       }
       data.id = rawValue.trim();
+      continue;
+    }
+
+    // Ignore relation arrays or metadata fields during update
+    if (mode === "update" && (key === "bookings" || key === "registrations" || key === "createdAt" || key === "created_at")) {
       continue;
     }
 

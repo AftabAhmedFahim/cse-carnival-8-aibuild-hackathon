@@ -29,7 +29,15 @@ export function RecordForm({
 
   useEffect(() => {
     if (initialData) {
-      setFormData({ ...initialData });
+      const data: Record<string, any> = {};
+      config.fields.forEach((f) => {
+        if (f.key === "equipment" && Array.isArray(initialData.equipment)) {
+          data[f.key] = initialData.equipment.join(", ");
+        } else {
+          data[f.key] = initialData[f.key] ?? (f.type === "number" ? 0 : "");
+        }
+      });
+      setFormData(data);
     } else {
       const defaults: Record<string, any> = {};
       config.fields.forEach((f) => {
@@ -63,7 +71,13 @@ export function RecordForm({
     e.preventDefault();
     setErrorMessage(null);
     try {
-      await onSubmit(formData);
+      const payload: Record<string, any> = {};
+      config.fields.forEach((f) => {
+        if (formData[f.key] !== undefined) {
+          payload[f.key] = formData[f.key];
+        }
+      });
+      await onSubmit(payload);
     } catch (err: any) {
       setErrorMessage(err.message || "Failed to save record");
     }
