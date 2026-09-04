@@ -146,14 +146,20 @@ export async function findFreeRooms(
 /**
  * Bookings on a room that clash with a window. Empty means the room is free.
  * Used by the booking endpoint to build its 409 response.
+ *
+ * Pass the transaction client as `client` when calling this inside
+ * prisma.$transaction. Using the global client there would issue the query on a
+ * second connection, which deadlocks against the transaction's own SQLite lock
+ * until the transaction times out.
  */
 export async function findConflictingBookings(
   roomId: string,
   date: string,
   startTime: string,
   endTime: string,
+  client: Pick<typeof prisma, "booking"> = prisma,
 ) {
-  const sameDay = await prisma.booking.findMany({
+  const sameDay = await client.booking.findMany({
     where: { roomId, date },
     orderBy: { startTime: "asc" },
   });
