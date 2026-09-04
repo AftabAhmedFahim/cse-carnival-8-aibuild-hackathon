@@ -1,11 +1,12 @@
-// PLACEHOLDER ONLY — Person B owns the real dashboard shell (sidebar, nav, theme).
-// Deliberately unstyled so it can be replaced wholesale without a merge conflict.
+// Root layout providing dark dashboard shell, responsive sidebar, and toast notifications.
 import type { Metadata } from "next";
 import "./globals.css";
+import { Sidebar } from "@/components/Sidebar";
+import { ToastProvider } from "@/components/Toast";
 
 export const metadata: Metadata = {
-  title: "CampusOS",
-  description: "Campus data manager with an AI agent over live data.",
+  title: "CampusOS — University Management System",
+  description: "Unified campus data manager with live database sync and AI assistant.",
 };
 
 export default function RootLayout({
@@ -14,8 +15,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className="dark">
+      <body className="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col lg:flex-row antialiased">
+        <ToastProvider>
+          <Sidebar />
+          <main className="flex-1 lg:pl-64 min-h-screen flex flex-col">
+            <div className="flex-1 w-full">{children}</div>
+          </main>
+        </ToastProvider>
+      </body>
     </html>
   );
 }
