@@ -40,9 +40,9 @@ export default function ChatInput({
   };
 
   return (
-    <div className="border-t border-gray-800/90 bg-gray-950/80 backdrop-blur-md p-4 sticky bottom-0 z-10">
+    <div className="border-t border-[rgba(255,255,255,0.08)] bg-black/90 backdrop-blur-md p-4 sticky bottom-0 z-10">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-end gap-2 bg-gray-900/90 border border-gray-800 rounded-2xl px-4 py-3 focus-within:border-indigo-500/50 focus-within:ring-1 focus-within:ring-indigo-500/30 transition-all shadow-inner">
+        <div className="flex items-end gap-2 bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl px-4 py-3 focus-within:border-[rgba(255,255,255,0.25)] focus-within:ring-1 focus-within:ring-white/20 transition-all shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
           <textarea
             ref={textareaRef}
             value={input}
@@ -55,18 +55,18 @@ export default function ChatInput({
                 : "Ask about classes, rooms, events, or assignments… (Press Enter to send)"
             }
             rows={1}
-            className="flex-1 bg-transparent text-white placeholder-gray-500 resize-none outline-none text-sm leading-relaxed max-h-36 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 bg-transparent text-white placeholder-[#8e8e8e] resize-none outline-none text-sm leading-relaxed max-h-36 disabled:opacity-50 disabled:cursor-not-allowed"
           />
 
           <button
             onClick={onSend}
             disabled={!input.trim() || isLoading}
-            className="shrink-0 w-9 h-9 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed text-white flex items-center justify-center transition-all duration-150 shadow-md shadow-indigo-600/20 active:scale-95"
+            className="shrink-0 w-9 h-9 rounded-full bg-white hover:bg-zinc-200 disabled:bg-[#28282a] disabled:text-[#8e8e8e] disabled:cursor-not-allowed text-black flex items-center justify-center transition-all duration-150 shadow-[0_4px_14px_rgba(0,0,0,0.16)] active:scale-95"
             title="Send message"
           >
             {isLoading ? (
               <svg
-                className="w-4 h-4 animate-spin text-white"
+                className="w-4 h-4 animate-spin text-black"
                 fill="none"
                 viewBox="0 0 24 24"
               >
@@ -102,7 +102,7 @@ export default function ChatInput({
           </button>
         </div>
 
-        <div className="flex items-center justify-between text-[11px] text-gray-500 mt-2 px-1">
+        <div className="flex items-center justify-between text-[11px] text-[#8e8e8e] mt-2 px-1">
           <span>CampusOS live database agent</span>
           <span>Press Enter to send · Shift+Enter for new line</span>
         </div>
