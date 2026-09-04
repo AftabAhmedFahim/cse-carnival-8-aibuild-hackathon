@@ -96,7 +96,7 @@ export function RecordForm({
     >
       <div
         ref={modalRef}
-        className="w-full max-w-xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150"
+        className="w-full max-w-xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-2xl overflow-hidden my-8 animate-modal-spring"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-[#121214]">
@@ -111,7 +111,7 @@ export function RecordForm({
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1.5 rounded-full text-[#8e8e8e] hover:text-white hover:bg-[#28282a] transition-colors"
+            className="p-1.5 rounded-full text-[#8e8e8e] hover:text-white hover:bg-[#28282a] hover:rotate-90 hover:scale-110 active:scale-95 transition-all duration-200"
             aria-label="Close modal"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -150,14 +150,14 @@ export function RecordForm({
                       required={field.required}
                       placeholder={field.placeholder}
                       onChange={(e) => handleChange(field.key, e.target.value)}
-                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors resize-none"
+                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white focus:ring-2 focus:ring-white/20 transition-all duration-200 resize-none"
                     />
                   ) : field.type === "select" ? (
                     <select
                       value={value}
                       required={field.required}
                       onChange={(e) => handleChange(field.key, e.target.value)}
-                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
+                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white focus:ring-2 focus:ring-white/20 transition-all duration-200"
                     >
                       {field.options?.map((opt) => (
                         <option key={opt} value={opt} className="bg-[#161618] text-white">
@@ -177,7 +177,7 @@ export function RecordForm({
                           field.type === "number" ? Number(e.target.value) : e.target.value,
                         )
                       }
-                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
+                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white focus:ring-2 focus:ring-white/20 transition-all duration-200"
                     />
                   )}
                 </div>

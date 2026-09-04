@@ -117,19 +117,21 @@ export default function StatsCounter({ stats }: { stats: LiveStatsData }) {
           return (
             <div
               key={item.key}
-              className="p-3.5 sm:p-4 rounded-2xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] shadow-[0_4px_14px_rgba(0,0,0,0.16)] flex flex-col justify-between group hover:border-[rgba(255,255,255,0.18)] transition-colors duration-200"
+              className="p-3.5 sm:p-4 rounded-2xl card-interactive flex flex-col justify-between group cursor-default"
               style={{
                 animationDelay: `${motionTokens.delays.statsBase + idx * motionTokens.delays.statsStagger}ms`,
               }}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-base sm:text-lg">{item.icon}</span>
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-[#8e8e8e] group-hover:text-[#c8c8c8] transition-colors">
+                <span className="text-base sm:text-lg inline-block transform group-hover:scale-125 transition-transform duration-300">
+                  {item.icon}
+                </span>
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-[#8e8e8e] group-hover:text-white transition-colors">
                   Live DB
                 </span>
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight tabular-nums">
+                <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight tabular-nums group-hover:text-zinc-100 transition-colors">
                   {value}
                 </div>
                 <div className="text-xs font-medium text-white mt-0.5">

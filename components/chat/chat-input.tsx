@@ -42,7 +42,7 @@ export default function ChatInput({
   return (
     <div className="border-t border-[rgba(255,255,255,0.08)] bg-black/90 backdrop-blur-md p-4 sticky bottom-0 z-10">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-end gap-2 bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl px-4 py-3 focus-within:border-[rgba(255,255,255,0.25)] focus-within:ring-1 focus-within:ring-white/20 transition-all shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
+        <div className="flex items-end gap-2 bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl px-4 py-3 focus-within:border-[rgba(255,255,255,0.35)] focus-within:ring-2 focus-within:ring-white/10 transition-all duration-200 shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
           <textarea
             ref={textareaRef}
             value={input}
@@ -61,7 +61,7 @@ export default function ChatInput({
           <button
             onClick={onSend}
             disabled={!input.trim() || isLoading}
-            className="shrink-0 w-9 h-9 rounded-full bg-white hover:bg-zinc-200 disabled:bg-[#28282a] disabled:text-[#8e8e8e] disabled:cursor-not-allowed text-black flex items-center justify-center transition-all duration-150 shadow-[0_4px_14px_rgba(0,0,0,0.16)] active:scale-95"
+            className="shrink-0 w-9 h-9 rounded-full bg-white hover:bg-zinc-100 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] disabled:bg-[#28282a] disabled:text-[#8e8e8e] disabled:cursor-not-allowed text-black flex items-center justify-center transition-all duration-200 shadow-[0_4px_14px_rgba(0,0,0,0.16)] hover:scale-105 active:scale-90"
             title="Send message"
           >
             {isLoading ? (

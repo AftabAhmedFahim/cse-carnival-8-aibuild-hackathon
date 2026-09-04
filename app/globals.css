@@ -16,6 +16,10 @@
     --secondary-foreground: #ffffff;
     --primary: #ffffff;
     --primary-foreground: #000000;
+
+    /* Physics-based linear() easing stops */
+    --spring-easing: linear(0, 0.016 0.5%, 0.06 1%, 0.226 2%, 1.116 5.4%, 1.375 6.6%, 1.527 7.7%, 1.565 8.2%, 1.585 8.8%, 1.581 9.3%, 1.559 9.8%, 1.458 10.9%, 0.937 14.3%, 0.784 15.5%, 0.693 16.6%, 0.67 17.1%, 0.657 17.7%, 0.671 18.7%, 0.729 19.8%, 1.042 23.3%, 1.13 24.5%, 1.182 25.6%, 1.201 26.7%, 1.192 27.7%, 1.156 28.8%, 0.977 32.2%, 0.925 33.4%, 0.894 34.5%, 0.882 35.6%, 0.887 36.6%, 0.907 37.7%, 1.045 42.4%, 1.069 44.5%, 1.059 46.3%, 0.979 50.9%, 0.96 53.4%, 0.966 55.3%, 1.013 59.9%, 1.024 62.3%, 0.986 71.2%, 1.008 79.9%, 0.995 88.9%, 1);
+    --bounce-easing: linear(0, 0.214 14.7%, 0.386 23.7%, 0.598 31.9%, 0.999 44.7%, 0.807 52.6%, 0.762 56%, 0.747 59.4%, 0.758 62.4%, 0.793 65.6%, 0.999 77.4%, 0.961 81.2%, 0.949 84.8%, 0.956 88%, 0.993 95.5%, 1);
   }
 
   body {
@@ -26,7 +30,7 @@
   }
 }
 
-/* Reusable pill buttons */
+/* Reusable pill buttons with spring physics hover and tactile click */
 .btn-primary-pill {
   display: inline-flex;
   align-items: center;
@@ -36,14 +40,19 @@
   color: #000000;
   font-weight: 600;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
-  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.35s var(--spring-easing), background-color 0.15s ease, box-shadow 0.25s ease;
 }
 .btn-primary-pill:hover {
-  background-color: #e5e5e5;
-  transform: translateY(-0.5px);
+  background-color: #f3f3f3;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
 .btn-primary-pill:active {
-  transform: translateY(0.5px);
+  transform: translateY(1px) scale(0.96);
+  transition-duration: 0.1s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary-pill {
@@ -56,11 +65,56 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   font-weight: 500;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
-  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.35s var(--spring-easing), background-color 0.15s ease, border-color 0.2s ease, box-shadow 0.25s ease;
 }
 .btn-secondary-pill:hover {
-  background-color: #38383c;
+  background-color: #343438;
   color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1.5px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.btn-secondary-pill:active {
+  transform: translateY(1px) scale(0.96);
+  transition-duration: 0.1s;
+}
+
+/* Micro-interaction action button pill (Edit, Cancel, etc.) */
+.btn-action-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.25s var(--spring-easing), background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.btn-action-pill:hover {
+  transform: translateY(-1px) scale(1.05);
+}
+.btn-action-pill:active {
+  transform: scale(0.94);
+  transition-duration: 0.08s;
+}
+
+/* Interactive Card for Dashboard & Overview */
+.card-interactive {
+  background-color: #0d0d0d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  transition: transform 0.4s var(--spring-easing), border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.3s ease;
+}
+.card-interactive:hover {
+  background-color: #141416;
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px) scale(1.008);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 255, 255, 0.03);
+}
+.card-interactive:active {
+  transform: translateY(0px) scale(0.985);
+  transition-duration: 0.12s;
 }
 
 /* Custom scrollbar */
@@ -76,6 +130,7 @@
 ::-webkit-scrollbar-thumb {
   background: #28282a;
   border-radius: 999px;
+  transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -91,12 +146,19 @@
 
 .glow-primary-cta {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 22px rgba(255, 255, 255, 0.32);
+  transition: transform 0.35s var(--spring-easing), box-shadow 0.25s ease, background-color 0.15s ease;
 }
 
 .glow-primary-cta:hover {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 0 30px rgba(255, 255, 255, 0.45);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3), 0 0 34px rgba(255, 255, 255, 0.5);
 }
 
+.glow-primary-cta:active {
+  transform: translateY(1px) scale(0.96);
+}
+
+/* Keyframes */
 @keyframes landingHeaderSlide {
   from {
     opacity: 0;
@@ -139,6 +201,137 @@
   }
 }
 
+/* Modern Gradient Shimmer Wave for Skeletons */
+@keyframes shimmerWave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerWave 1.8s infinite ease-in-out;
+}
+
+/* Modal Spring Scale In */
+@keyframes modalScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modal-spring {
+  animation: modalScaleIn 0.35s var(--spring-easing) forwards;
+}
+
+/* Message Bubble Slide In */
+@keyframes messageSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-message-enter {
+  animation: messageSlideIn 0.3s var(--spring-easing) forwards;
+}
+
+/* Card Cascading Entrance */
+@keyframes cardCascadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card-cascade {
+  opacity: 0;
+  animation: cardCascadeIn 0.5s var(--spring-easing) forwards;
+}
+
+/* Subtle Levitation / Float */
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-subtle-float {
+  animation: subtleFloat 3.5s ease-in-out infinite;
+}
+
+/* Radar Pulse / Live Status Ping */
+@keyframes radarPing {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  70%, 100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.animate-radar-ping {
+  animation: radarPing 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Toast Spring Slide Up */
+@keyframes toastSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-toast-enter {
+  animation: toastSlideUp 0.35s var(--spring-easing) forwards;
+}
+
+/* Priority Pulse Glow */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 10px 2px rgba(244, 63, 94, 0.3);
+  }
+}
+
+.animate-priority-pulse {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+/* Standard animation utility classes */
 .animate-landing-header {
   animation: landingHeaderSlide 700ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
 }
@@ -172,18 +365,42 @@
   animation: landingRadialDrift 20s ease-in-out infinite;
 }
 
+/* Accessibility: strictly respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .animate-landing-header,
   .animate-landing-line1,
   .animate-landing-line2,
   .animate-landing-subhead,
   .animate-landing-cta,
-  .animate-landing-stats {
+  .animate-landing-stats,
+  .animate-card-cascade,
+  .animate-modal-spring,
+  .animate-message-enter,
+  .animate-toast-enter,
+  .animate-subtle-float,
+  .skeleton-shimmer {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
   }
-  .animate-radial-drift {
-    animation: none !important;
+
+  .btn-primary-pill:hover,
+  .btn-primary-pill:active,
+  .btn-secondary-pill:hover,
+  .btn-secondary-pill:active,
+  .btn-action-pill:hover,
+  .btn-action-pill:active,
+  .card-interactive:hover,
+  .card-interactive:active {
+    transform: none !important;
   }
 }

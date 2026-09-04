@@ -131,7 +131,7 @@ export function RoomBookingModal({
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-2xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
+      <div className="w-full max-w-2xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-2xl overflow-hidden my-8 animate-modal-spring">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-[#121214]">
           <div>
@@ -144,7 +144,7 @@ export function RoomBookingModal({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-[#8e8e8e] hover:text-white hover:bg-[#28282a] transition-colors"
+            className="p-1.5 rounded-full text-[#8e8e8e] hover:text-white hover:bg-[#28282a] hover:rotate-90 hover:scale-110 active:scale-95 transition-all duration-200"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -194,7 +194,7 @@ export function RoomBookingModal({
                   placeholder="e.g. Dr. Jane Smith or ACM"
                   value={bookedBy}
                   onChange={(e) => setBookedBy(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white focus:ring-2 focus:ring-white/20 transition-all duration-200"
                 />
               </div>
 
@@ -205,7 +205,7 @@ export function RoomBookingModal({
                   required
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white focus:ring-2 focus:ring-white/20 transition-all duration-200"
                 />
               </div>
 
@@ -217,7 +217,7 @@ export function RoomBookingModal({
                   placeholder="HH:MM (e.g. 09:00)"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white focus:ring-2 focus:ring-white/20 transition-all duration-200"
                 />
               </div>
 
@@ -229,7 +229,7 @@ export function RoomBookingModal({
                   placeholder="HH:MM (e.g. 10:30)"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white focus:ring-2 focus:ring-white/20 transition-all duration-200"
                 />
               </div>
 
@@ -240,7 +240,7 @@ export function RoomBookingModal({
                   placeholder="e.g. Makeup Class or Society Meeting"
                   value={purpose}
                   onChange={(e) => setPurpose(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white focus:ring-2 focus:ring-white/20 transition-all duration-200"
                 />
               </div>
             </div>
@@ -286,7 +286,7 @@ export function RoomBookingModal({
                     </div>
                     <button
                       onClick={() => handleCancelBooking(booking.id)}
-                      className="px-3 py-1 text-xs font-medium rounded-full bg-rose-950/40 text-rose-300 hover:bg-rose-900/60 hover:text-white border border-rose-900/40 transition-colors shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+                      className="btn-action-pill px-3 py-1 text-xs font-medium rounded-full bg-rose-950/40 text-rose-300 hover:bg-rose-900/60 hover:text-white border border-rose-900/40 transition-all duration-150 shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
                     >
                       Cancel
                     </button>

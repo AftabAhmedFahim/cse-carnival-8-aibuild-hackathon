@@ -73,10 +73,10 @@ export default function MessageList({
                 <button
                   key={suggestion}
                   onClick={() => onSelectSuggestion(suggestion)}
-                  className="flex items-center justify-between text-xs text-white bg-[#0d0d0d] hover:bg-[#141416] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.25)] rounded-full px-5 py-3 transition-all duration-150 text-left group shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+                  className="flex items-center justify-between text-xs text-white bg-[#0d0d0d] hover:bg-[#141416] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.3)] rounded-full px-5 py-3 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] text-left group shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
                 >
-                  <span>{suggestion}</span>
-                  <span className="text-[#8e8e8e] group-hover:text-white font-mono text-[11px] transition-colors">
+                  <span className="group-hover:text-zinc-100 transition-colors">{suggestion}</span>
+                  <span className="text-[#8e8e8e] group-hover:text-white group-hover:translate-x-1.5 font-mono text-[11px] transition-all duration-200">
                     Ask &rarr;
                   </span>
                 </button>
@@ -92,41 +92,41 @@ export default function MessageList({
         return (
           <div
             key={message.id}
-            className={`flex items-start gap-3 ${
+            className={`flex items-start gap-3 animate-message-enter ${
               isUser ? "justify-end" : "justify-start"
             }`}
           >
             {/* Assistant avatar */}
             {!isUser && (
-              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(0,0,0,0.16)] text-black text-xs font-bold ring-1 ring-white/20 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(0,0,0,0.16)] text-black text-xs font-bold ring-1 ring-white/20 mt-0.5 transform hover:scale-105 transition-transform">
                 🤖
               </div>
             )}
 
             <div
-              className={`max-w-[88%] sm:max-w-[80%] rounded-2xl p-4 transition-all ${
+              className={`max-w-[88%] sm:max-w-[80%] rounded-2xl p-4 transition-all duration-200 ${
                 isUser
-                  ? "bg-[#28282a] text-white border border-[rgba(255,255,255,0.08)] rounded-tr-sm shadow-[0_4px_14px_rgba(0,0,0,0.16)] text-sm leading-relaxed whitespace-pre-wrap"
-                  : "bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] text-white rounded-tl-sm shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+                  ? "bg-[#28282a] text-white border border-[rgba(255,255,255,0.08)] rounded-tr-sm shadow-[0_4px_14px_rgba(0,0,0,0.16)] text-sm leading-relaxed whitespace-pre-wrap hover:border-[rgba(255,255,255,0.15)]"
+                  : "bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] text-white rounded-tl-sm shadow-[0_4px_14px_rgba(0,0,0,0.16)] hover:border-[rgba(255,255,255,0.15)]"
               }`}
             >
               {message.isLoading ? (
                 <div className="flex items-center gap-3 py-1 text-sm text-[#8e8e8e]">
                   <div className="flex gap-1.5">
                     <span
-                      className="w-2 h-2 rounded-full bg-white animate-bounce"
+                      className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)] animate-bounce"
                       style={{ animationDelay: "0ms" }}
                     />
                     <span
-                      className="w-2 h-2 rounded-full bg-white animate-bounce"
+                      className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)] animate-bounce"
                       style={{ animationDelay: "150ms" }}
                     />
                     <span
-                      className="w-2 h-2 rounded-full bg-white animate-bounce"
+                      className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)] animate-bounce"
                       style={{ animationDelay: "300ms" }}
                     />
                   </div>
-                  <span className="text-xs text-white font-medium">
+                  <span className="text-xs text-white font-medium animate-pulse">
                     Reasoning &amp; executing tools over live data…
                   </span>
                 </div>

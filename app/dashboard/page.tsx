@@ -60,22 +60,32 @@ export default function DashboardHomePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {SECTIONS.map((sec) => (
+        {SECTIONS.map((sec, idx) => (
           <Link
             key={sec.href}
             href={sec.href}
-            className="group block p-6 rounded-2xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.25)] hover:bg-[#141416] transition-all duration-200 shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+            style={{ animationDelay: `${idx * 65}ms` }}
+            className="group block p-6 rounded-2xl card-interactive animate-card-cascade"
           >
             <div className="flex items-center justify-between mb-4">
-              <span className="text-3xl">{sec.icon}</span>
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#28282a] text-[#8e8e8e] group-hover:text-white border border-[rgba(255,255,255,0.08)] transition-colors">
+              <span className="text-3xl inline-block transform group-hover:scale-125 group-hover:-rotate-3 transition-transform duration-300 ease-out">
+                {sec.icon}
+              </span>
+              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#28282a] text-[#8e8e8e] group-hover:text-white group-hover:bg-[#343438] border border-[rgba(255,255,255,0.08)] group-hover:border-[rgba(255,255,255,0.2)] transition-all duration-200">
                 {sec.count}
               </span>
             </div>
-            <h2 className="text-lg font-bold text-white transition-colors">
-              {sec.title}
-            </h2>
-            <p className="text-xs text-[#8e8e8e] mt-1.5 leading-relaxed">{sec.description}</p>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-white group-hover:text-zinc-100 transition-colors">
+                {sec.title}
+              </h2>
+              <span className="text-xs text-white/40 group-hover:text-white group-hover:translate-x-1 transition-all duration-200 font-mono">
+                &rarr;
+              </span>
+            </div>
+            <p className="text-xs text-[#8e8e8e] group-hover:text-[#a0a0a0] mt-1.5 leading-relaxed transition-colors">
+              {sec.description}
+            </p>
           </Link>
         ))}
       </div>

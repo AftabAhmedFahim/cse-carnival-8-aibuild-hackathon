@@ -74,8 +74,8 @@ export function DataTable<T extends Record<string, any>>({
       let dotColor = "bg-zinc-400";
 
       if (p === "high") {
-        badgeStyle = "bg-rose-950/70 text-rose-300 border-rose-700/80";
-        dotColor = "bg-rose-400";
+        badgeStyle = "bg-rose-950/70 text-rose-300 border-rose-700/80 animate-priority-pulse";
+        dotColor = "bg-rose-400 animate-ping";
       } else if (p === "medium") {
         badgeStyle = "bg-amber-950/70 text-amber-300 border-amber-700/80";
         dotColor = "bg-amber-400";
@@ -86,7 +86,7 @@ export function DataTable<T extends Record<string, any>>({
 
       return (
         <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badgeStyle} capitalize shadow-xs`}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badgeStyle} capitalize shadow-xs transition-transform duration-200 hover:scale-105`}
         >
           <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
           {String(value)}
@@ -109,7 +109,7 @@ export function DataTable<T extends Record<string, any>>({
       }
       return (
         <span
-          className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${badgeClass} capitalize`}
+          className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${badgeClass} capitalize transition-transform duration-150 hover:scale-105`}
         >
           {String(value)}
         </span>
@@ -140,7 +140,7 @@ export function DataTable<T extends Record<string, any>>({
               {String(value)}
             </span>
             {isOverdue && (
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-950 text-rose-300 border border-rose-800">
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-950 text-rose-300 border border-rose-800 animate-priority-pulse">
                 Overdue
               </span>
             )}
@@ -229,7 +229,7 @@ export function DataTable<T extends Record<string, any>>({
               placeholder="Search in table..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-48 sm:w-64 pl-9 pr-3 py-1.5 text-sm rounded-full bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white/40 transition-colors"
+              className="w-48 sm:w-64 pl-9 pr-3 py-1.5 text-sm rounded-full bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all duration-200"
             />
             <svg
               className="w-4 h-4 text-[#8e8e8e] absolute left-3.5 top-2.5 pointer-events-none"
@@ -296,7 +296,7 @@ export function DataTable<T extends Record<string, any>>({
                   return (
                     <tr
                       key={id}
-                      className="hover:bg-[#161618]/60 transition-colors group"
+                      className="hover:bg-[#161619] transition-colors duration-150 group"
                     >
                       {config.fields.map((field) => (
                         <td
@@ -311,7 +311,7 @@ export function DataTable<T extends Record<string, any>>({
                           {customActions && customActions(record)}
                           <button
                             onClick={() => onEdit(record)}
-                            className="btn-secondary-pill px-3 py-1 text-xs"
+                            className="btn-action-pill btn-secondary-pill px-3 py-1 text-xs"
                             title="Edit record"
                           >
                             Edit
@@ -322,7 +322,7 @@ export function DataTable<T extends Record<string, any>>({
                                 onDelete(record);
                               }
                             }}
-                            className="px-3 py-1 text-xs font-medium rounded-full bg-rose-950/40 text-rose-300 hover:bg-rose-900/60 border border-rose-900/40 transition-colors shadow-[0_4px_14px_rgba(0,0,0,0.16)] focus:outline-none"
+                            className="btn-action-pill px-3 py-1 text-xs font-medium rounded-full bg-rose-950/40 text-rose-300 hover:bg-rose-900/60 hover:text-white border border-rose-900/40 transition-all duration-150 shadow-[0_4px_14px_rgba(0,0,0,0.16)] focus:outline-none"
                             title="Delete record"
                           >
                             Delete

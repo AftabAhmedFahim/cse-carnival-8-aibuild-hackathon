@@ -169,10 +169,10 @@ export default function StepTrace({ steps }: { steps: StepRecord[] }) {
       {/* Collapsible toggle header */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-xs px-3.5 py-2.5 rounded-full bg-[#141416] hover:bg-[#1a1a1c] border border-[rgba(255,255,255,0.08)] text-[#8e8e8e] hover:text-white transition-all duration-150 group shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+        className="w-full flex items-center justify-between text-xs px-3.5 py-2.5 rounded-full bg-[#141416] hover:bg-[#1a1a1c] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.2)] text-[#8e8e8e] hover:text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.99] group shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
       >
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="w-5 h-5 rounded-full bg-[#28282a] text-white border border-[rgba(255,255,255,0.08)] flex items-center justify-center text-[11px] font-medium">
+          <div className="w-5 h-5 rounded-full bg-[#28282a] text-white border border-[rgba(255,255,255,0.08)] flex items-center justify-center text-[11px] font-medium group-hover:scale-110 transition-transform duration-200">
             ⚡
           </div>
           <span className="font-semibold text-white">
@@ -214,7 +214,7 @@ export default function StepTrace({ steps }: { steps: StepRecord[] }) {
 
       {/* Expanded drawer */}
       {isOpen && (
-        <div className="mt-2.5 space-y-2 pl-2 sm:pl-3 border-l-2 border-white/20 ml-2">
+        <div className="mt-2.5 space-y-2 pl-2 sm:pl-3 border-l-2 border-white/20 ml-2 animate-in fade-in slide-in-from-top-1 duration-200">
           {steps.map((step, idx) => {
             const { label, icon, color } = formatToolName(step.toolName);
             const inputPreview = formatInputPreview(step.toolName, step.input);
@@ -224,7 +224,7 @@ export default function StepTrace({ steps }: { steps: StepRecord[] }) {
             return (
               <div
                 key={step.id || idx}
-                className="bg-[#121214] rounded-2xl border border-[rgba(255,255,255,0.08)] p-3.5 text-xs transition-all shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+                className="bg-[#121214] rounded-2xl border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.18)] p-3.5 text-xs transition-all duration-150 shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
               >
                 {/* Step header */}
                 <div className="flex items-center justify-between gap-2 flex-wrap mb-2">

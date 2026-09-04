@@ -99,8 +99,11 @@ export default function ChatPanel() {
                 <h1 className="text-base font-semibold text-white tracking-tight">
                   CampusOS Agent
                 </h1>
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <div className="relative flex items-center justify-center w-2.5 h-2.5">
+                    <div className="absolute w-full h-full rounded-full bg-emerald-400 animate-radar-ping" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 relative z-10" />
+                  </div>
                   Live DB
                 </span>
               </div>
@@ -114,7 +117,7 @@ export default function ChatPanel() {
             <button
               onClick={handleClearHistory}
               disabled={isLoading}
-              className="text-xs text-[#8e8e8e] hover:text-white bg-[#28282a] border border-[rgba(255,255,255,0.08)] px-3 py-1.5 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+              className="btn-action-pill text-xs text-[#8e8e8e] hover:text-white bg-[#28282a] hover:bg-[#343438] hover:border-[rgba(255,255,255,0.2)] border border-[rgba(255,255,255,0.08)] px-3.5 py-1.5 rounded-full transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
               title="Clear conversation"
             >
               <svg

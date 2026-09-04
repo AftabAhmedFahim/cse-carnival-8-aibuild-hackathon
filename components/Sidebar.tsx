@@ -117,11 +117,11 @@ export function Sidebar() {
         <div className="p-6">
           {/* Brand */}
           <Link href="/dashboard" className="flex items-center gap-3 mb-8 group">
-            <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center font-black text-black text-base shadow-[0_4px_14px_rgba(0,0,0,0.16)] group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center font-black text-black text-base shadow-[0_4px_14px_rgba(0,0,0,0.16)] group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.35)] transition-all duration-300">
               C
             </div>
             <div>
-              <span className="font-bold text-lg text-white tracking-tight block">CampusOS</span>
+              <span className="font-bold text-lg text-white tracking-tight block group-hover:text-zinc-100 transition-colors">CampusOS</span>
               <span className="text-[11px] text-[#8e8e8e] block tracking-wide uppercase font-semibold">University Core</span>
             </div>
           </Link>
@@ -141,13 +141,17 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileOpen(false)}
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all ${
+                  className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 active:scale-[0.97] ${
                     isActive
-                      ? "bg-[#28282a] text-white font-semibold border border-[rgba(255,255,255,0.08)] shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
-                      : "text-[#8e8e8e] hover:text-white hover:bg-[#18181a]"
+                      ? "bg-[#28282a] text-white font-semibold border border-[rgba(255,255,255,0.12)] shadow-[0_4px_14px_rgba(0,0,0,0.2)]"
+                      : "text-[#8e8e8e] hover:text-white hover:bg-[#18181a] hover:translate-x-1.5"
                   }`}
                 >
-                  <span className={isActive ? "text-white" : "text-[#8e8e8e]"}>
+                  <span
+                    className={`transform transition-transform duration-200 group-hover:scale-115 ${
+                      isActive ? "text-white" : "text-[#8e8e8e] group-hover:text-white"
+                    }`}
+                  >
                     {item.icon}
                   </span>
                   <span>{item.label}</span>
@@ -158,9 +162,12 @@ export function Sidebar() {
         </div>
 
         {/* Footer / Status */}
-        <div className="p-4 bg-[#0d0d0d] m-3 rounded-2xl border border-[rgba(255,255,255,0.08)]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="p-4 bg-[#0d0d0d] m-3 rounded-2xl border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.16)] transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="relative flex items-center justify-center w-3 h-3">
+              <div className="absolute w-full h-full rounded-full bg-emerald-400 animate-radar-ping" />
+              <div className="w-2 h-2 rounded-full bg-emerald-500 relative z-10" />
+            </div>
             <div>
               <p className="text-xs font-medium text-white">SQLite Connected</p>
               <p className="text-[11px] text-[#8e8e8e]">Live Campus Database</p>

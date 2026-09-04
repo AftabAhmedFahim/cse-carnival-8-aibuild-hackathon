@@ -47,12 +47,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-center justify-between p-4 rounded-lg shadow-xl border text-sm transition-all duration-200 animate-in fade-in slide-in-from-bottom-2 ${
+            className={`pointer-events-auto flex items-center justify-between p-4 rounded-2xl shadow-2xl border text-sm transition-all duration-200 animate-toast-enter hover:-translate-y-0.5 ${
               toast.type === "success"
-                ? "bg-zinc-900 border-emerald-500/50 text-emerald-300"
+                ? "bg-[#0d0d0d] border-emerald-500/40 text-emerald-300 shadow-[0_8px_24px_rgba(16,185,129,0.12)]"
                 : toast.type === "error"
-                  ? "bg-zinc-900 border-rose-500/50 text-rose-300"
-                  : "bg-zinc-900 border-indigo-500/50 text-indigo-300"
+                  ? "bg-[#0d0d0d] border-rose-500/40 text-rose-300 shadow-[0_8px_24px_rgba(244,63,94,0.12)]"
+                  : "bg-[#0d0d0d] border-white/20 text-white shadow-[0_8px_24px_rgba(255,255,255,0.08)]"
             }`}
           >
             <div className="flex items-center gap-3">
@@ -67,7 +67,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 </svg>
               )}
               {toast.type === "info" && (
-                <svg className="w-5 h-5 flex-shrink-0 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 flex-shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               )}
@@ -75,7 +75,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="ml-3 text-zinc-400 hover:text-zinc-200 focus:outline-none"
+              className="btn-action-pill ml-3 p-1 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800/80 focus:outline-none"
               aria-label="Dismiss notification"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

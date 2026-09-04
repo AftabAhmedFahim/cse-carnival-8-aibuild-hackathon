@@ -15,10 +15,10 @@ export function EmptyState({
   onAction,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-zinc-800 rounded-2xl bg-zinc-900/20 my-6">
-      <div className="w-12 h-12 rounded-full bg-zinc-800/80 flex items-center justify-center text-zinc-400 mb-4 ring-8 ring-zinc-900/50">
+    <div className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-[rgba(255,255,255,0.1)] rounded-2xl bg-[#0d0d0d] my-6">
+      <div className="w-14 h-14 rounded-full bg-[#1c1c1f] flex items-center justify-center text-[#8e8e8e] mb-4 ring-8 ring-[#141416] animate-subtle-float shadow-[0_4px_14px_rgba(0,0,0,0.2)]">
         <svg
-          className="w-6 h-6"
+          className="w-7 h-7"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -31,15 +31,15 @@ export function EmptyState({
           />
         </svg>
       </div>
-      <h3 className="text-base font-semibold text-zinc-200 mb-1">{title}</h3>
-      <p className="text-sm text-zinc-400 max-w-sm mb-6">{description}</p>
+      <h3 className="text-base font-semibold text-white mb-1">{title}</h3>
+      <p className="text-sm text-[#8e8e8e] max-w-sm mb-6">{description}</p>
       {onAction && (
         <button
           onClick={onAction}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+          className="btn-primary-pill gap-2 px-5 py-2.5 text-sm"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
           </svg>
           {actionLabel}
         </button>
