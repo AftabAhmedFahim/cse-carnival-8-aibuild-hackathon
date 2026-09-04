@@ -8,7 +8,9 @@ import { buildSystemPrompt } from "./prompt";
 
 const MAX_ITERATIONS = 6;
 const FALLBACK_MODELS = [
-  process.env.GEMINI_MODEL || "gemini-3.6-flash",
+  process.env.GEMINI_MODEL || "gemini-3.5-flash",
+  "gemini-flash-latest",
+  "gemini-3.6-flash",
   "gemini-3.7-flash",
 ];
 
@@ -50,8 +52,8 @@ async function generateContentWithRetry(
         continue;
       }
       if (status === 429 || status === 503) {
-        // All models exhausted, parse retryDelay or wait 20s
-        let waitMs = 20000;
+        // All models exhausted, parse retryDelay or wait 15s
+        let waitMs = 15000;
         const errStr = String(err);
         const match =
           errStr.match(/retry in ([0-9.]+)s/i) ||
@@ -60,13 +62,13 @@ async function generateContentWithRetry(
           waitMs = Math.ceil(parseFloat(match[1]) * 1000) + 1500;
         }
         console.log(
-          `[Quota / ${status}] Waiting ${Math.round(waitMs / 1000)}s for quota to clear...`,
+          `[Quota / ${status}] Waiting ${Math.round(waitMs / 1000)}s before retrying primary model...`,
         );
         await new Promise((r) => setTimeout(r, waitMs));
         try {
           return await ai.models.generateContent({
             ...params,
-            model: modelName,
+            model: FALLBACK_MODELS[0],
           });
         } catch (retryErr) {
           throw retryErr;
