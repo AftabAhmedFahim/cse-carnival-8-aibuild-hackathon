@@ -4,6 +4,93 @@ An intelligent university platform powered by an AI agent that understands and a
 
 ---
 
+## Running CampusOS locally
+
+Requires **Node.js 18.18 or newer** (developed on Node 24). Nothing else — no Docker, no database server, no `.env`.
+
+```bash
+npm install
+npx prisma migrate dev --name init
+npm run seed
+npm run dev
+```
+
+Then open **http://localhost:3000**.
+
+That is the whole setup. `npm install` generates the Prisma client, `migrate` creates the SQLite database at `prisma/dev.db`, and `seed` loads the five `data/*.json` files into it.
+
+`npm run seed` is idempotent — it clears every table before inserting, so you can re-run it at any time to reset the database to the shipped seed data. A correct run prints:
+
+```
+  Table            Rows   Expected
+  ------------------------------------
+  schedules         24         24
+  rooms             20         20
+  events             7          7
+  announcements      8          8
+  assignments        8          8
+```
+
+The JSON files in `data/` are **seed input only**. Once seeded, every read and write goes to SQLite — edits made in the dashboard persist across reloads and restarts, and the JSON files never change.
+
+### Tech stack
+
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 3 |
+| Database | SQLite via Prisma 5 (`prisma/dev.db`) |
+| LLM | Any provider with native tool calling — see `.env.example` |
+
+### Environment variables
+
+**None are required to run the dashboard or the API.** A fresh clone runs the four commands above with no `.env` file at all, because `prisma/schema.prisma` hardcodes the SQLite path rather than reading `DATABASE_URL`.
+
+To talk to the AI agent, copy `.env.example` to `.env` and set your LLM key:
+
+```bash
+cp .env.example .env
+```
+
+See [`.env.example`](./.env.example) for the full list and what reads each one. No real keys are committed to this repository.
+
+### API reference
+
+All five systems share one generic handler, so every endpoint below behaves identically across `schedules`, `rooms`, `events`, `announcements` and `assignments`.
+
+| Method | Route | Purpose |
+|---|---|---|
+| `GET` | `/api/[system]` | List, with filters (below) |
+| `POST` | `/api/[system]` | Create |
+| `GET` | `/api/[system]/[id]` | Read one |
+| `PATCH` | `/api/[system]/[id]` | Update (partial) |
+| `DELETE` | `/api/[system]/[id]` | Delete |
+| `GET` | `/api/rooms/free` | Rooms free in a window, by capacity and equipment |
+| `POST` | `/api/rooms/[id]/book` | Book a room — `409` on an overlap |
+| `GET` | `/api/rooms/[id]/bookings` | Bookings on one room |
+| `DELETE` | `/api/bookings/[id]` | Cancel a booking |
+| `POST` | `/api/events/[id]/register` | Register — `409` when at capacity |
+| `GET` | `/api/events/[id]/registrations` | Registrations for one event |
+| `DELETE` | `/api/registrations/[id]` | Cancel a registration |
+
+List filters: `?field=value` exact match, `?field_gte=` / `_lte` / `_gt` / `_lt` / `_contains`, `?search=text` across the system's text fields, `?equipment=projector,AC` on rooms, plus `?sort=`, `?order=`, `?limit=`. An unrecognised system or field returns `400` naming the problem.
+
+```bash
+# a few worked examples
+curl "http://localhost:3000/api/schedules?day=Sunday"
+curl "http://localhost:3000/api/announcements?priority=high"
+curl "http://localhost:3000/api/rooms?type=lab&capacity_gte=30&equipment=projector"
+curl "http://localhost:3000/api/rooms/free?date=2026-09-05&startTime=14:00&endTime=16:00&minCapacity=5&equipment=projector"
+```
+
+Two things worth knowing when reading the data:
+
+- **`Room.equipment`** is stored as a JSON string (SQLite has no array type) but the API always returns it as a real array. Matching is case-insensitive.
+- **`Event.registered`** is the authoritative headcount and is deliberately larger than `registrations.length` — the seed includes anonymous registrations. Capacity checks use `registered`.
+
+---
+
 ## The Challenge
 
 Students struggle daily with scattered campus information — class changes buried in group chats, deadlines forgotten until the last minute, no easy way to know what's happening on campus right now.
