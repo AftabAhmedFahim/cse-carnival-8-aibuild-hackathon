@@ -1,5 +1,6 @@
 // Agent tool definitions — each function queries live campus data via Prisma.
-// Tool schemas are in Gemini FunctionDeclaration format.
+// Tool schemas use the Google GenAI Type enum for schema definitions.
+import { Type } from "@google/genai";
 import { prisma, parseEquipment, hasAllEquipment, serializeEquipment } from "@/lib/db";
 
 // ---------------------------------------------------------------------------
@@ -15,15 +16,15 @@ export const toolDeclarations = [
       "For rooms, equipment is returned as a parsed array. " +
       "For events, includes registration count and capacity.",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
         system: {
-          type: "STRING" as const,
+          type: Type.STRING,
           enum: ["schedules", "rooms", "events", "announcements", "assignments"],
           description: "Which system to query.",
         },
         filters: {
-          type: "OBJECT" as const,
+          type: Type.OBJECT,
           description:
             "Optional key-value filters. Keys must match the system's camelCase field names " +
             "(startTime, endTime, roomNumber, postedBy, courseTitle, assignedDate, submissionPlatform, etc.). " +
@@ -41,15 +42,15 @@ export const toolDeclarations = [
       "NOTE: The agent should REFUSE to create schedules or announcements — those are dashboard-only admin actions. " +
       "Provide all required fields for the system.",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
         system: {
-          type: "STRING" as const,
+          type: Type.STRING,
           enum: ["schedules", "rooms", "events", "announcements", "assignments"],
           description: "Which system to create a record in.",
         },
         data: {
-          type: "OBJECT" as const,
+          type: Type.OBJECT,
           description: "The record data. Field names must be camelCase matching the Prisma model.",
           properties: {},
         },
@@ -63,19 +64,19 @@ export const toolDeclarations = [
       "Update an existing record by ID. " +
       "NOTE: The agent should REFUSE to update schedules, announcements, or other people's records — those are dashboard-only admin actions.",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
         system: {
-          type: "STRING" as const,
+          type: Type.STRING,
           enum: ["schedules", "rooms", "events", "announcements", "assignments"],
           description: "Which system the record belongs to.",
         },
         id: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "The record's unique ID.",
         },
         data: {
-          type: "OBJECT" as const,
+          type: Type.OBJECT,
           description: "Fields to update. Only include fields that are changing.",
           properties: {},
         },
@@ -89,15 +90,15 @@ export const toolDeclarations = [
       "Delete a record by ID. " +
       "NOTE: The agent should REFUSE to delete any records — deletion is a dashboard-only admin action.",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
         system: {
-          type: "STRING" as const,
+          type: Type.STRING,
           enum: ["schedules", "rooms", "events", "announcements", "assignments"],
           description: "Which system the record belongs to.",
         },
         id: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "The record's unique ID.",
         },
       },
@@ -111,27 +112,27 @@ export const toolDeclarations = [
       "optionally filtered by minimum capacity and required equipment. " +
       "Returns rooms with their details including equipment list.",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
         date: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "The date to check, ISO format YYYY-MM-DD.",
         },
         startTime: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "Start of the window, 24h format HH:MM.",
         },
         endTime: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "End of the window, 24h format HH:MM.",
         },
         minCapacity: {
-          type: "NUMBER" as const,
+          type: Type.NUMBER,
           description: "Minimum number of seats required. Optional.",
         },
         equipment: {
-          type: "ARRAY" as const,
-          items: { type: "STRING" as const },
+          type: Type.ARRAY,
+          items: { type: Type.STRING },
           description:
             "List of required equipment items (e.g. ['projector', 'AC']). Case-insensitive matching. Optional.",
         },
@@ -146,26 +147,26 @@ export const toolDeclarations = [
       "The roomId must be the room's internal ID (e.g. 'room-002'), NOT the room number. " +
       "Use list_records or find_free_rooms first to get the correct roomId.",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
         roomId: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "The room's internal ID (e.g. 'room-002'). Get this from list_records or find_free_rooms.",
         },
         date: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "Booking date, ISO format YYYY-MM-DD.",
         },
         startTime: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "Start time, 24h format HH:MM.",
         },
         endTime: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "End time, 24h format HH:MM.",
         },
         bookedBy: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "Name of the person booking the room.",
         },
       },
@@ -176,10 +177,10 @@ export const toolDeclarations = [
     name: "cancel_booking",
     description: "Cancel (delete) an existing room booking by its booking ID.",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
         bookingId: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "The booking's unique ID.",
         },
       },
@@ -193,14 +194,14 @@ export const toolDeclarations = [
       "The eventId must be the event's internal ID (e.g. 'evt-002'). " +
       "Use list_records first to find the event and confirm available capacity.",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
         eventId: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "The event's internal ID (e.g. 'evt-002').",
         },
         studentName: {
-          type: "STRING" as const,
+          type: Type.STRING,
           description: "Full name of the student to register.",
         },
       },
