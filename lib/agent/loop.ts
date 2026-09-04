@@ -8,8 +8,8 @@ import { buildSystemPrompt } from "./prompt";
 
 const MAX_ITERATIONS = 6;
 const FALLBACK_MODELS = [
-  process.env.GEMINI_MODEL || "gemini-3.7-flash",
-  "gemini-3.6-flash",
+  process.env.GEMINI_MODEL || "gemini-3.6-flash",
+  "gemini-3.7-flash",
 ];
 
 export interface AgentStepRecord {
@@ -50,8 +50,8 @@ async function generateContentWithRetry(
         continue;
       }
       if (status === 429 || status === 503) {
-        // All models exhausted, parse retryDelay or wait 25s
-        let waitMs = 25000;
+        // All models exhausted, parse retryDelay or wait 20s
+        let waitMs = 20000;
         const errStr = String(err);
         const match =
           errStr.match(/retry in ([0-9.]+)s/i) ||
@@ -66,7 +66,7 @@ async function generateContentWithRetry(
         try {
           return await ai.models.generateContent({
             ...params,
-            model: FALLBACK_MODELS[0],
+            model: modelName,
           });
         } catch (retryErr) {
           throw retryErr;
@@ -82,9 +82,9 @@ async function generateContentWithRetry(
 export async function runAgentLoop(
   messages: { role: "user" | "assistant"; content: string }[],
 ): Promise<AgentResult> {
-  const apiKey = process.env.GOOGLE_API_KEY;
+  const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    throw new Error("GOOGLE_API_KEY is not set. Add it to your .env file.");
+    throw new Error("GOOGLE_API_KEY (or GEMINI_API_KEY) is not set. Add it to your .env file.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
