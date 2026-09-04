@@ -42,9 +42,9 @@ export default function MessageList({
     <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
       {messages.length === 0 && (
         <div className="flex flex-col items-center justify-center min-h-[55vh] text-center max-w-xl mx-auto py-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 mb-4 ring-1 ring-white/20">
+          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-[0_4px_14px_rgba(0,0,0,0.16)] mb-4 ring-1 ring-white/20 text-black">
             <svg
-              className="w-8 h-8 text-white"
+              className="w-7 h-7 text-black"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -58,14 +58,14 @@ export default function MessageList({
             </svg>
           </div>
 
-          <h2 className="text-xl font-bold text-white mb-2">CampusOS AI Agent</h2>
-          <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+          <h2 className="text-xl font-bold text-white mb-2">CampusOS AI Assistant</h2>
+          <p className="text-sm text-[#8e8e8e] mb-6 leading-relaxed">
             Query live university schedules, check available rooms, track assignments,
             and inspect real-time tool execution traces.
           </p>
 
           <div className="w-full space-y-2 text-left">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 px-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#8e8e8e] px-1">
               Suggested queries
             </p>
             <div className="grid grid-cols-1 gap-2">
@@ -73,10 +73,10 @@ export default function MessageList({
                 <button
                   key={suggestion}
                   onClick={() => onSelectSuggestion(suggestion)}
-                  className="flex items-center justify-between text-xs text-gray-300 hover:text-white bg-gray-900/70 hover:bg-gray-800/90 border border-gray-800 hover:border-indigo-500/40 rounded-xl px-4 py-3 transition-all duration-150 text-left group"
+                  className="flex items-center justify-between text-xs text-white bg-[#0d0d0d] hover:bg-[#141416] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.25)] rounded-full px-5 py-3 transition-all duration-150 text-left group shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
                 >
                   <span>{suggestion}</span>
-                  <span className="text-gray-500 group-hover:text-indigo-400 font-mono text-[11px] transition-colors">
+                  <span className="text-[#8e8e8e] group-hover:text-white font-mono text-[11px] transition-colors">
                     Ask &rarr;
                   </span>
                 </button>
@@ -98,7 +98,7 @@ export default function MessageList({
           >
             {/* Assistant avatar */}
             {!isUser && (
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/20 text-white text-xs font-bold ring-1 ring-white/20 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(0,0,0,0.16)] text-black text-xs font-bold ring-1 ring-white/20 mt-0.5">
                 🤖
               </div>
             )}
@@ -106,27 +106,27 @@ export default function MessageList({
             <div
               className={`max-w-[88%] sm:max-w-[80%] rounded-2xl p-4 transition-all ${
                 isUser
-                  ? "bg-indigo-600 text-white rounded-tr-sm shadow-md shadow-indigo-600/20 text-sm leading-relaxed whitespace-pre-wrap"
-                  : "bg-gray-900/90 border border-gray-800 text-gray-100 rounded-tl-sm shadow-lg shadow-black/40"
+                  ? "bg-[#28282a] text-white border border-[rgba(255,255,255,0.08)] rounded-tr-sm shadow-[0_4px_14px_rgba(0,0,0,0.16)] text-sm leading-relaxed whitespace-pre-wrap"
+                  : "bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] text-white rounded-tl-sm shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
               }`}
             >
               {message.isLoading ? (
-                <div className="flex items-center gap-3 py-1 text-sm text-gray-400">
+                <div className="flex items-center gap-3 py-1 text-sm text-[#8e8e8e]">
                   <div className="flex gap-1.5">
                     <span
-                      className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce"
+                      className="w-2 h-2 rounded-full bg-white animate-bounce"
                       style={{ animationDelay: "0ms" }}
                     />
                     <span
-                      className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce"
+                      className="w-2 h-2 rounded-full bg-white animate-bounce"
                       style={{ animationDelay: "150ms" }}
                     />
                     <span
-                      className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce"
+                      className="w-2 h-2 rounded-full bg-white animate-bounce"
                       style={{ animationDelay: "300ms" }}
                     />
                   </div>
-                  <span className="text-xs text-indigo-300 font-medium">
+                  <span className="text-xs text-white font-medium">
                     Reasoning &amp; executing tools over live data…
                   </span>
                 </div>
@@ -135,51 +135,51 @@ export default function MessageList({
               ) : (
                 <>
                   {/* Rich Markdown Output */}
-                  <div className="prose prose-invert prose-sm max-w-none text-gray-200 text-sm leading-relaxed overflow-x-auto">
+                  <div className="prose prose-invert prose-sm max-w-none text-white text-sm leading-relaxed overflow-x-auto">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
                         table: ({ children }) => (
-                          <div className="my-3 overflow-x-auto rounded-lg border border-gray-800">
-                            <table className="min-w-full divide-y divide-gray-800 text-left text-xs">
+                          <div className="my-3 overflow-x-auto rounded-xl border border-[rgba(255,255,255,0.08)]">
+                            <table className="min-w-full divide-y divide-[rgba(255,255,255,0.08)] text-left text-xs">
                               {children}
                             </table>
                           </div>
                         ),
                         thead: ({ children }) => (
-                          <thead className="bg-gray-950/80 text-gray-300 uppercase tracking-wider font-semibold">
+                          <thead className="bg-[#141416] text-[#8e8e8e] uppercase tracking-wider font-semibold">
                             {children}
                           </thead>
                         ),
                         th: ({ children }) => (
-                          <th className="px-3 py-2 text-gray-400 border-b border-gray-800 font-medium">
+                          <th className="px-3 py-2 text-[#8e8e8e] border-b border-[rgba(255,255,255,0.08)] font-medium">
                             {children}
                           </th>
                         ),
                         td: ({ children }) => (
-                          <td className="px-3 py-2 border-b border-gray-800/60 font-mono text-[12px] text-gray-300">
+                          <td className="px-3 py-2 border-b border-[rgba(255,255,255,0.06)] font-mono text-[12px] text-white">
                             {children}
                           </td>
                         ),
                         code: ({ children, className }) => {
                           const isInline = !className;
                           return isInline ? (
-                            <code className="px-1.5 py-0.5 rounded bg-gray-950 text-indigo-300 font-mono text-[12px] border border-gray-800">
+                            <code className="px-1.5 py-0.5 rounded-md bg-[#161618] text-white font-mono text-[12px] border border-[rgba(255,255,255,0.08)]">
                               {children}
                             </code>
                           ) : (
-                            <pre className="p-3 my-2 rounded-xl bg-gray-950 text-gray-300 font-mono text-xs border border-gray-800 overflow-x-auto">
+                            <pre className="p-3 my-2 rounded-xl bg-[#141416] text-white font-mono text-xs border border-[rgba(255,255,255,0.08)] overflow-x-auto">
                               <code>{children}</code>
                             </pre>
                           );
                         },
                         ul: ({ children }) => (
-                          <ul className="list-disc pl-4 space-y-1 my-2 text-gray-300">
+                          <ul className="list-disc pl-4 space-y-1 my-2 text-white">
                             {children}
                           </ul>
                         ),
                         ol: ({ children }) => (
-                          <ol className="list-decimal pl-4 space-y-1 my-2 text-gray-300">
+                          <ol className="list-decimal pl-4 space-y-1 my-2 text-white">
                             {children}
                           </ol>
                         ),
@@ -189,20 +189,20 @@ export default function MessageList({
                           </h1>
                         ),
                         h2: ({ children }) => (
-                          <h2 className="text-sm font-bold text-indigo-300 mt-3 mb-1">
+                          <h2 className="text-sm font-bold text-white mt-3 mb-1">
                             {children}
                           </h2>
                         ),
                         h3: ({ children }) => (
-                          <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mt-2 mb-1">
+                          <h3 className="text-xs font-bold uppercase tracking-wider text-[#8e8e8e] mt-2 mb-1">
                             {children}
                           </h3>
                         ),
                         p: ({ children }) => (
-                          <p className="my-1.5 leading-relaxed">{children}</p>
+                          <p className="my-1.5 leading-relaxed text-white">{children}</p>
                         ),
                         blockquote: ({ children }) => (
-                          <blockquote className="border-l-2 border-indigo-500 pl-3 my-2 text-gray-400 italic text-xs">
+                          <blockquote className="border-l-2 border-white/40 pl-3 my-2 text-[#8e8e8e] italic text-xs">
                             {children}
                           </blockquote>
                         ),
@@ -222,7 +222,7 @@ export default function MessageList({
 
             {/* User avatar */}
             {isUser && (
-              <div className="w-8 h-8 rounded-xl bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 text-gray-300 text-xs font-semibold mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-[#28282a] border border-[rgba(255,255,255,0.08)] flex items-center justify-center shrink-0 text-white text-xs font-semibold mt-0.5 shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
                 👤
               </div>
             )}
