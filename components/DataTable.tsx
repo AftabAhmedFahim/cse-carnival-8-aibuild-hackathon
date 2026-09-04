@@ -17,6 +17,26 @@ interface DataTableProps<T extends Record<string, any>> {
   extraHeaderActions?: React.ReactNode;
 }
 
+function getRelativeDateLabel(dateStr: string): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
+  const target = new Date(dateStr + "T00:00:00");
+  if (isNaN(target.getTime())) return null;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  target.setHours(0, 0, 0, 0);
+
+  const diffTime = target.getTime() - today.getTime();
+  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Tomorrow";
+  if (diffDays === -1) return "Yesterday";
+  if (diffDays > 1 && diffDays <= 14) return `in ${diffDays} days`;
+  if (diffDays < -1 && diffDays >= -14) return `${Math.abs(diffDays)} days ago`;
+  return null;
+}
+
 export function DataTable<T extends Record<string, any>>({
   config,
   data,
@@ -47,21 +67,28 @@ export function DataTable<T extends Record<string, any>>({
       return <span className="text-zinc-500">—</span>;
     }
 
-    // Priority badges for announcements
+    // Color-coded priority badges for announcements
     if (key === "priority") {
       const p = String(value).toLowerCase();
-      let colorClass = "bg-zinc-800 text-zinc-300 border-zinc-700";
+      let badgeStyle = "bg-zinc-800 text-zinc-300 border-zinc-700";
+      let dotColor = "bg-zinc-400";
+
       if (p === "high") {
-        colorClass = "bg-rose-950/60 text-rose-300 border-rose-800/80";
+        badgeStyle = "bg-rose-950/70 text-rose-300 border-rose-700/80";
+        dotColor = "bg-rose-400";
       } else if (p === "medium") {
-        colorClass = "bg-amber-950/60 text-amber-300 border-amber-800/80";
+        badgeStyle = "bg-amber-950/70 text-amber-300 border-amber-700/80";
+        dotColor = "bg-amber-400";
       } else if (p === "low") {
-        colorClass = "bg-blue-950/60 text-blue-300 border-blue-800/80";
+        badgeStyle = "bg-blue-950/70 text-blue-300 border-blue-700/80";
+        dotColor = "bg-blue-400";
       }
+
       return (
         <span
-          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${colorClass} capitalize`}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badgeStyle} capitalize shadow-xs`}
         >
+          <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
           {String(value)}
         </span>
       );
@@ -72,17 +99,17 @@ export function DataTable<T extends Record<string, any>>({
       const s = String(value).toLowerCase();
       let badgeClass = "bg-zinc-800 text-zinc-300 border-zinc-700";
       if (s === "available" || s === "ongoing") {
-        badgeClass = "bg-emerald-950/60 text-emerald-300 border-emerald-800/80";
+        badgeClass = "bg-emerald-950/70 text-emerald-300 border-emerald-700/80";
       } else if (s === "upcoming" || s === "submitted") {
-        badgeClass = "bg-sky-950/60 text-sky-300 border-sky-800/80";
+        badgeClass = "bg-sky-950/70 text-sky-300 border-sky-700/80";
       } else if (s === "full" || s === "late") {
-        badgeClass = "bg-rose-950/60 text-rose-300 border-rose-800/80";
+        badgeClass = "bg-rose-950/70 text-rose-300 border-rose-700/80";
       } else if (s === "pending") {
-        badgeClass = "bg-amber-950/60 text-amber-300 border-amber-800/80";
+        badgeClass = "bg-amber-950/70 text-amber-300 border-amber-700/80";
       }
       return (
         <span
-          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${badgeClass} capitalize`}
+          className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${badgeClass} capitalize`}
         >
           {String(value)}
         </span>
@@ -91,7 +118,7 @@ export function DataTable<T extends Record<string, any>>({
 
     // Deadline check with overdue highlight for assignments
     if (key === "deadline") {
-      const deadlineDate = new Date(value);
+      const deadlineDate = new Date(String(value) + "T00:00:00");
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const isOverdue =
@@ -100,19 +127,39 @@ export function DataTable<T extends Record<string, any>>({
         record.status !== "submitted" &&
         record.status !== "graded";
 
+      const relative = getRelativeDateLabel(String(value));
+
       return (
         <div className="flex flex-col">
-          <span
-            className={`font-medium ${
-              isOverdue ? "text-rose-400 font-semibold" : "text-zinc-200"
-            }`}
-          >
-            {String(value)}
-          </span>
-          {isOverdue && (
-            <span className="text-[10px] text-rose-500 font-semibold uppercase tracking-wider">
-              Overdue
+          <div className="flex items-center gap-2">
+            <span
+              className={`font-mono text-xs ${
+                isOverdue ? "text-rose-400 font-bold" : "text-zinc-200"
+              }`}
+            >
+              {String(value)}
             </span>
+            {isOverdue && (
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-950 text-rose-300 border border-rose-800">
+                Overdue
+              </span>
+            )}
+          </div>
+          {relative && !isOverdue && (
+            <span className="text-[11px] text-zinc-400 font-medium mt-0.5">{relative}</span>
+          )}
+        </div>
+      );
+    }
+
+    // General date fields with relative hints
+    if (key === "date" || key === "assignedDate" || key === "expires" || key === "endDate") {
+      const relative = getRelativeDateLabel(String(value));
+      return (
+        <div className="flex flex-col">
+          <span className="font-mono text-xs text-zinc-200">{String(value)}</span>
+          {relative && (
+            <span className="text-[11px] text-zinc-400 font-medium mt-0.5">{relative}</span>
           )}
         </div>
       );
@@ -138,7 +185,7 @@ export function DataTable<T extends Record<string, any>>({
           {items.map((eq, i) => (
             <span
               key={i}
-              className="inline-block px-1.5 py-0.5 bg-zinc-800 text-zinc-300 text-[11px] rounded border border-zinc-700/60"
+              className="inline-block px-1.5 py-0.5 bg-zinc-800/80 text-zinc-300 text-[11px] rounded border border-zinc-700/60"
             >
               {eq}
             </span>
@@ -157,7 +204,7 @@ export function DataTable<T extends Record<string, any>>({
       );
     }
 
-    return <span className="text-zinc-200">{String(value)}</span>;
+    return <span className="text-zinc-200 text-sm">{String(value)}</span>;
   };
 
   return (
