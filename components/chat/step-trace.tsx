@@ -165,29 +165,29 @@ export default function StepTrace({ steps }: { steps: StepRecord[] }) {
   const totalDuration = steps.reduce((sum, s) => sum + (s.durationMs || 0), 0);
 
   return (
-    <div className="mt-3.5 pt-3 border-t border-gray-800/80">
+    <div className="mt-3.5 pt-3 border-t border-[rgba(255,255,255,0.08)]">
       {/* Collapsible toggle header */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-xs px-3 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-900 border border-gray-800/90 text-gray-400 hover:text-gray-200 transition-all duration-150 group"
+        className="w-full flex items-center justify-between text-xs px-3.5 py-2.5 rounded-full bg-[#141416] hover:bg-[#1a1a1c] border border-[rgba(255,255,255,0.08)] text-[#8e8e8e] hover:text-white transition-all duration-150 group shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
       >
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="w-5 h-5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center text-[11px] font-medium">
+          <div className="w-5 h-5 rounded-full bg-[#28282a] text-white border border-[rgba(255,255,255,0.08)] flex items-center justify-center text-[11px] font-medium">
             ⚡
           </div>
-          <span className="font-semibold text-gray-200">
+          <span className="font-semibold text-white">
             {steps.length} tool execution{steps.length > 1 ? "s" : ""}
           </span>
-          <span className="text-gray-500 text-[11px]">
+          <span className="text-[#8e8e8e] text-[11px]">
             ({totalDuration > 0 ? `${totalDuration}ms` : "completed"})
           </span>
           <div className="hidden sm:flex items-center gap-1.5 ml-1">
             {steps.map((s, idx) => {
-              const { label, color } = formatToolName(s.toolName);
+              const { label } = formatToolName(s.toolName);
               return (
                 <span
                   key={idx}
-                  className={`text-[10px] px-1.5 py-0.5 rounded border font-mono ${color}`}
+                  className="text-[10px] px-2 py-0.5 rounded-full border border-[rgba(255,255,255,0.08)] bg-[#28282a] text-white font-mono"
                 >
                   {label}
                 </span>
@@ -196,7 +196,7 @@ export default function StepTrace({ steps }: { steps: StepRecord[] }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 text-[11px] text-gray-500 group-hover:text-gray-300">
+        <div className="flex items-center gap-1 text-[11px] text-[#8e8e8e] group-hover:text-white">
           <span>{isOpen ? "Hide trace" : "View trace"}</span>
           <svg
             className={`w-3.5 h-3.5 transition-transform duration-200 ${
@@ -214,7 +214,7 @@ export default function StepTrace({ steps }: { steps: StepRecord[] }) {
 
       {/* Expanded drawer */}
       {isOpen && (
-        <div className="mt-2.5 space-y-2 pl-2 sm:pl-3 border-l-2 border-indigo-500/30 ml-2">
+        <div className="mt-2.5 space-y-2 pl-2 sm:pl-3 border-l-2 border-white/20 ml-2">
           {steps.map((step, idx) => {
             const { label, icon, color } = formatToolName(step.toolName);
             const inputPreview = formatInputPreview(step.toolName, step.input);
@@ -224,24 +224,24 @@ export default function StepTrace({ steps }: { steps: StepRecord[] }) {
             return (
               <div
                 key={step.id || idx}
-                className="bg-gray-900/90 rounded-xl border border-gray-800 p-3 text-xs transition-all"
+                className="bg-[#121214] rounded-2xl border border-[rgba(255,255,255,0.08)] p-3.5 text-xs transition-all shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
               >
                 {/* Step header */}
                 <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500 font-mono text-[11px]">{idx + 1}.</span>
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] font-medium ${color}`}>
+                    <span className="text-[#8e8e8e] font-mono text-[11px]">{idx + 1}.</span>
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[11px] font-medium ${color}`}>
                       <span>{icon}</span>
                       <span>{label}</span>
                     </span>
-                    <code className="text-gray-400 text-[11px] font-mono">
+                    <code className="text-[#8e8e8e] text-[11px] font-mono">
                       {step.toolName}
                     </code>
                   </div>
 
                   <div className="flex items-center gap-2">
                     {step.durationMs !== undefined && (
-                      <span className="text-[11px] text-gray-500 font-mono">
+                      <span className="text-[11px] text-[#8e8e8e] font-mono">
                         {step.durationMs}ms
                       </span>
                     )}
@@ -255,31 +255,31 @@ export default function StepTrace({ steps }: { steps: StepRecord[] }) {
                 </div>
 
                 {/* Input row */}
-                <div className="mb-1.5">
-                  <div className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-0.5">
+                <div className="mb-2">
+                  <div className="text-[10px] uppercase tracking-wider text-[#8e8e8e] font-semibold mb-1">
                     Input Arguments
                   </div>
-                  <div className="bg-gray-950/70 rounded-lg p-2 font-mono text-[11px] text-gray-300 border border-gray-800/80 overflow-x-auto whitespace-pre-wrap break-all">
+                  <div className="bg-black rounded-xl p-2.5 font-mono text-[11px] text-white border border-[rgba(255,255,255,0.08)] overflow-x-auto whitespace-pre-wrap break-all">
                     {inputPreview}
                   </div>
                 </div>
 
                 {/* Output preview */}
                 <div>
-                  <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-0.5">
+                  <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-[#8e8e8e] font-semibold mb-1">
                     <span>Output Preview</span>
                     <button
                       onClick={() => setExpandedIndex(isItemExpanded ? null : idx)}
-                      className="text-indigo-400 hover:text-indigo-300 lowercase font-normal hover:underline"
+                      className="text-white hover:text-zinc-300 lowercase font-normal hover:underline"
                     >
                       {isItemExpanded ? "collapse raw json" : "view raw json"}
                     </button>
                   </div>
                   <div
-                    className={`rounded-lg p-2 font-mono text-[11px] border overflow-x-auto whitespace-pre-wrap break-all ${
+                    className={`rounded-xl p-2.5 font-mono text-[11px] border overflow-x-auto whitespace-pre-wrap break-all ${
                       isError
-                        ? "bg-rose-950/20 text-rose-300 border-rose-900/40"
-                        : "bg-gray-950/70 text-emerald-400/90 border-gray-800/80"
+                        ? "bg-rose-950/30 text-rose-300 border-rose-900/40"
+                        : "bg-black text-emerald-400 border-[rgba(255,255,255,0.08)]"
                     }`}
                   >
                     {isItemExpanded ? step.output : outputPreview}
