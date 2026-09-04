@@ -51,9 +51,9 @@ export default function HomePage() {
     <div className="p-6 sm:p-10 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-200">
       <div className="space-y-2">
         <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-          Welcome to <span className="text-indigo-400">CampusOS</span>
+          Welcome to <span className="text-white">CampusOS</span>
         </h1>
-        <p className="text-zinc-400 text-sm sm:text-base max-w-2xl">
+        <p className="text-[#8e8e8e] text-sm sm:text-base max-w-2xl">
           Unified university operations platform. Select a module below to view live data, create
           and edit records, or interact with campus resources.
         </p>
@@ -64,18 +64,18 @@ export default function HomePage() {
           <Link
             key={sec.href}
             href={sec.href}
-            className="group block p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 hover:border-indigo-500/50 hover:bg-zinc-800/50 transition-all duration-200 shadow-sm"
+            className="group block p-6 rounded-2xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.25)] hover:bg-[#141416] transition-all duration-200 shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
           >
             <div className="flex items-center justify-between mb-4">
               <span className="text-3xl">{sec.icon}</span>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700/60">
+              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#28282a] text-[#8e8e8e] group-hover:text-white border border-[rgba(255,255,255,0.08)] transition-colors">
                 {sec.count}
               </span>
             </div>
-            <h2 className="text-lg font-bold text-zinc-100 group-hover:text-indigo-300 transition-colors">
+            <h2 className="text-lg font-bold text-white transition-colors">
               {sec.title}
             </h2>
-            <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">{sec.description}</p>
+            <p className="text-xs text-[#8e8e8e] mt-1.5 leading-relaxed">{sec.description}</p>
           </Link>
         ))}
       </div>
