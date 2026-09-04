@@ -96,22 +96,22 @@ export function RecordForm({
     >
       <div
         ref={modalRef}
-        className="w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150"
+        className="w-full max-w-xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-zinc-900/50">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-[#121214]">
           <div>
-            <h3 id="modal-title" className="text-lg font-semibold text-zinc-100">
+            <h3 id="modal-title" className="text-lg font-semibold text-white">
               {isEdit ? `Edit ${config.singularTitle}` : `New ${config.singularTitle}`}
             </h3>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-[#8e8e8e] mt-0.5">
               {isEdit ? "Update the details below." : `Fill in the details to create a new ${config.singularTitle.toLowerCase()}.`}
             </p>
           </div>
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors"
+            className="p-1.5 rounded-full text-[#8e8e8e] hover:text-white hover:bg-[#28282a] transition-colors"
             aria-label="Close modal"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,7 +123,7 @@ export function RecordForm({
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {errorMessage && (
-            <div className="p-3.5 rounded-lg bg-rose-950/60 border border-rose-800/80 text-rose-300 text-sm">
+            <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-800/80 text-rose-300 text-sm">
               {errorMessage}
             </div>
           )}
@@ -138,7 +138,7 @@ export function RecordForm({
                   key={field.key}
                   className={isFullWidth ? "sm:col-span-2 space-y-1.5" : "space-y-1.5"}
                 >
-                  <label className="block text-xs font-medium text-zinc-300">
+                  <label className="block text-xs font-medium text-[#8e8e8e]">
                     {field.label}
                     {field.required && <span className="text-rose-400 ml-1">*</span>}
                   </label>
@@ -150,17 +150,17 @@ export function RecordForm({
                       required={field.required}
                       placeholder={field.placeholder}
                       onChange={(e) => handleChange(field.key, e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors resize-none"
+                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors resize-none"
                     />
                   ) : field.type === "select" ? (
                     <select
                       value={value}
                       required={field.required}
                       onChange={(e) => handleChange(field.key, e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
                     >
                       {field.options?.map((opt) => (
-                        <option key={opt} value={opt} className="bg-zinc-900 text-zinc-200">
+                        <option key={opt} value={opt} className="bg-[#161618] text-white">
                           {opt}
                         </option>
                       ))}
@@ -177,7 +177,7 @@ export function RecordForm({
                           field.type === "number" ? Number(e.target.value) : e.target.value,
                         )
                       }
-                      className="w-full px-3 py-2 text-sm rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                      className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
                     />
                   )}
                 </div>
@@ -186,19 +186,19 @@ export function RecordForm({
           </div>
 
           {/* Footer actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[rgba(255,255,255,0.08)]">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-sm font-medium rounded-lg text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
+              className="btn-secondary-pill px-5 py-2 text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-colors shadow-sm disabled:opacity-50"
+              className="btn-primary-pill inline-flex items-center gap-2 px-5 py-2 text-sm disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>
