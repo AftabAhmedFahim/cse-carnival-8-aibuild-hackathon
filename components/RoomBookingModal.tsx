@@ -90,8 +90,9 @@ export function RoomBookingModal({
         throw new Error(errData.error || `Booking failed (HTTP ${res.status})`);
       }
 
-      const newBooking = await res.json();
-      setBookings((prev) => [...prev, newBooking]);
+      const data = await res.json();
+      const bookingRecord = data.booking || data;
+      setBookings((prev) => [...prev, bookingRecord]);
       setBookedBy("");
       setPurpose("");
       showToast(`Room ${room.roomNumber} booked successfully!`, "success");
@@ -104,6 +105,7 @@ export function RoomBookingModal({
   };
 
   const handleCancelBooking = async (bookingId: string) => {
+    if (!bookingId) return;
     if (!confirm("Are you sure you want to cancel this booking?")) return;
 
     try {
