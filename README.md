@@ -4,6 +4,12 @@ An intelligent university platform powered by an AI agent that understands and a
 
 ---
 
+## Project overview
+
+CampusOS puts a student's scattered campus information — class schedules, rooms, events, announcements and assignment deadlines — into one place, and puts an AI agent on top of it that reads and acts on that data live. The five `data/*.json` files are loaded once into a SQLite database through Prisma; from that moment the database is the single source of truth and the JSON files are never read again. A dashboard section for each of the five systems supports add, edit and delete through one generic CRUD API (`/api/[system]`), with rooms additionally bookable and events registerable, and every change written straight to SQLite so it survives a reload or a restart. The AI agent talks to that same database through real tool calls — looking records up, searching for a free room by time, size and equipment, booking it, registering a student — and because every tool queries at call time rather than from a cached copy, an edit made in the dashboard is reflected in the agent's very next answer.
+
+---
+
 ## Running CampusOS locally
 
 Requires **Node.js 18.18 or newer** (developed on Node 24). Nothing else — no Docker, no database server, no `.env`.
@@ -32,6 +38,14 @@ That is the whole setup. `npm install` generates the Prisma client, `migrate` cr
 ```
 
 The JSON files in `data/` are **seed input only**. Once seeded, every read and write goes to SQLite — edits made in the dashboard persist across reloads and restarts, and the JSON files never change.
+
+To check the whole stack end to end, with the server running in another terminal:
+
+```bash
+npm run smoke
+```
+
+It exercises data loading, a full CRUD round-trip, live-edit freshness, room search, booking conflicts, and event registration, then cleans up everything it created — so it is safe to re-run.
 
 ### Tech stack
 
