@@ -129,18 +129,18 @@ export function EventRegistrationModal({
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
+      <div className="w-full max-w-2xl bg-[#0d0d0d] border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-zinc-900/50">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-[#121214]">
           <div>
             <h3 className="text-lg font-semibold text-white">{event.name}</h3>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              Venue: <span className="text-zinc-300 font-medium">{event.venue}</span> · Date: <span className="text-zinc-300 font-medium">{event.date}</span> ({event.startTime} - {event.endTime})
+            <p className="text-xs text-[#8e8e8e] mt-0.5">
+              Venue: <span className="text-white font-medium">{event.venue}</span> · Date: <span className="text-white font-medium">{event.date}</span> ({event.startTime} - {event.endTime})
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="p-1.5 rounded-full text-[#8e8e8e] hover:text-white hover:bg-[#28282a] transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -150,17 +150,17 @@ export function EventRegistrationModal({
 
         <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
           {/* Capacity Progress Bar */}
-          <div className="p-4 rounded-xl bg-zinc-950/70 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-[#141416] border border-[rgba(255,255,255,0.08)] space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-zinc-300">Registration Capacity</span>
-              <span className="font-mono text-xs font-bold text-zinc-200">
+              <span className="font-medium text-white">Registration Capacity</span>
+              <span className="font-mono text-xs font-bold text-white">
                 {registeredCount} / {event.capacity} ({capacityPercent}%)
               </span>
             </div>
-            <div className="w-full h-2.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div className="w-full h-2.5 bg-[#28282a] rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all duration-300 ${
-                  isAtCapacity ? "bg-rose-500" : capacityPercent > 80 ? "bg-amber-500" : "bg-indigo-500"
+                  isAtCapacity ? "bg-rose-500" : capacityPercent > 80 ? "bg-amber-500" : "bg-white"
                 }`}
                 style={{ width: `${capacityPercent}%` }}
               />
@@ -183,31 +183,31 @@ export function EventRegistrationModal({
           )}
 
           {/* Student Registration Form */}
-          <form onSubmit={handleRegister} className="bg-zinc-950/60 p-4 rounded-xl border border-zinc-800/80 space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <form onSubmit={handleRegister} className="bg-[#141416] p-4 rounded-xl border border-[rgba(255,255,255,0.08)] space-y-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#8e8e8e]">
               Register Student
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-zinc-300 mb-1">Student Name *</label>
+                <label className="block text-xs font-medium text-[#8e8e8e] mb-1">Student Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Alex Johnson"
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-zinc-300 mb-1">Student ID (Optional)</label>
+                <label className="block text-xs font-medium text-[#8e8e8e] mb-1">Student ID (Optional)</label>
                 <input
                   type="text"
                   placeholder="e.g. 20-40532"
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-[#161618] border border-[rgba(255,255,255,0.08)] text-white placeholder-[#8e8e8e] focus:outline-none focus:border-white transition-colors"
                 />
               </div>
             </div>
@@ -216,7 +216,7 @@ export function EventRegistrationModal({
               <button
                 type="submit"
                 disabled={isSubmitting || isAtCapacity}
-                className="px-4 py-1.5 text-sm font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 transition-colors shadow-sm disabled:opacity-50"
+                className="btn-primary-pill px-5 py-2 text-sm disabled:opacity-50"
               >
                 {isSubmitting ? "Registering..." : isAtCapacity ? "Event Full" : "Submit Registration"}
               </button>
@@ -225,27 +225,27 @@ export function EventRegistrationModal({
 
           {/* Registrations List */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#8e8e8e] mb-3">
               Registered Attendees ({registrations.length})
             </h4>
 
             {registrations.length === 0 ? (
-              <p className="text-sm text-zinc-500 italic py-2">No individual student registrations listed.</p>
+              <p className="text-sm text-[#8e8e8e] italic py-2">No individual student registrations listed.</p>
             ) : (
-              <div className="border border-zinc-800 rounded-xl overflow-hidden divide-y divide-zinc-800">
+              <div className="border border-[rgba(255,255,255,0.08)] rounded-xl overflow-hidden divide-y divide-[rgba(255,255,255,0.06)] bg-[#121214]">
                 {registrations.map((reg) => (
-                  <div key={reg.id} className="p-3.5 flex items-center justify-between hover:bg-zinc-800/40 transition-colors">
+                  <div key={reg.id} className="p-3.5 flex items-center justify-between hover:bg-[#18181a] transition-colors">
                     <div>
-                      <span className="font-medium text-sm text-zinc-100">{reg.studentName}</span>
+                      <span className="font-medium text-sm text-white">{reg.studentName}</span>
                       {reg.studentId && (
-                        <span className="ml-2 text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+                        <span className="ml-2 text-xs px-2.5 py-0.5 rounded-full bg-[#28282a] text-white border border-[rgba(255,255,255,0.08)]">
                           {reg.studentId}
                         </span>
                       )}
                     </div>
                     <button
                       onClick={() => handleCancelRegistration(reg.id)}
-                      className="px-2.5 py-1 text-xs font-medium rounded bg-rose-950/50 text-rose-300 hover:bg-rose-900 hover:text-white border border-rose-800 transition-colors"
+                      className="px-3 py-1 text-xs font-medium rounded-full bg-rose-950/40 text-rose-300 hover:bg-rose-900/60 hover:text-white border border-rose-900/40 transition-colors shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
                     >
                       Cancel
                     </button>
@@ -257,10 +257,10 @@ export function EventRegistrationModal({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end p-4 border-t border-zinc-800 bg-zinc-900/50">
+        <div className="flex justify-end p-4 border-t border-[rgba(255,255,255,0.08)] bg-[#121214]">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-lg text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors"
+            className="btn-secondary-pill px-5 py-2 text-sm"
           >
             Close
           </button>
