@@ -268,13 +268,35 @@ export async function executeTool(
 // Tool implementations
 // ---------------------------------------------------------------------------
 
-/** Build a Prisma `where` clause from the user-supplied filters object. */
+const VALID_SYSTEM_FIELDS: Record<string, Set<string>> = {
+  schedules: new Set(["id", "course", "title", "day", "startTime", "endTime", "room", "instructor", "section"]),
+  rooms: new Set(["id", "roomNumber", "type", "capacity", "floor", "status"]),
+  events: new Set(["id", "name", "description", "date", "startTime", "endTime", "endDate", "venue", "organizer", "capacity", "registered", "status"]),
+  announcements: new Set(["id", "title", "body", "date", "priority", "postedBy", "expires"]),
+  assignments: new Set(["id", "course", "courseTitle", "title", "description", "assignedDate", "deadline", "submissionPlatform", "status", "marks"]),
+};
+
+const SYSTEM_FIELD_ALIASES: Record<string, Record<string, string>> = {
+  schedules: { start_time: "startTime", end_time: "endTime" },
+  rooms: { room: "roomNumber", room_number: "roomNumber" },
+  events: { title: "name", room: "venue", start_time: "startTime", end_time: "endTime", end_date: "endDate" },
+  announcements: { posted_by: "postedBy", description: "body" },
+  assignments: { course_title: "courseTitle", assigned_date: "assignedDate", submission_platform: "submissionPlatform" },
+};
+
+/** Build a Prisma `where` clause from the user-supplied filters object with field aliasing and sanitization. */
 function buildWhere(system: string, filters?: Record<string, unknown>): Record<string, unknown> {
   if (!filters || Object.keys(filters).length === 0) return {};
 
+  const valid = VALID_SYSTEM_FIELDS[system] || new Set();
+  const aliases = SYSTEM_FIELD_ALIASES[system] || {};
   const where: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(filters)) {
+
+  for (let [key, value] of Object.entries(filters)) {
     if (value === undefined || value === null) continue;
+    if (aliases[key]) key = aliases[key];
+    if (valid.size > 0 && !valid.has(key)) continue;
+
     if (typeof value === "string") {
       // SQLite's LIKE (which Prisma `contains` maps to) is case-insensitive by default
       where[key] = { contains: value };
