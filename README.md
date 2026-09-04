@@ -53,21 +53,37 @@ It exercises data loading, a full CRUD round-trip, live-edit freshness, room sea
 |---|---|
 | Framework | Next.js 14 (App Router) |
 | Language | TypeScript 5 |
-| Styling | Tailwind CSS 3 |
+| Styling | Pure Black Dark Theme (#000000, #0d0d0d, pill buttons, Inter font) |
 | Database | SQLite via Prisma 5 (`prisma/dev.db`) |
-| LLM | Any provider with native tool calling — see `.env.example` |
+| LLM | Google Gemini (`gemini-3.5-flash` / `gemini-flash-latest` / `gemini-3.6-flash`) via `@google/genai` SDK |
 
 ### Environment variables
 
-**None are required to run the dashboard or the API.** A fresh clone runs the four commands above with no `.env` file at all, because `prisma/schema.prisma` hardcodes the SQLite path rather than reading `DATABASE_URL`.
+**None are required to run the dashboard or the CRUD API.** A fresh clone runs the four commands above (`npm install`, `npx prisma migrate dev`, `npm run seed`, `npm run dev`) with no `.env` file at all, because `prisma/schema.prisma` configures SQLite locally.
 
-To talk to the AI agent, copy `.env.example` to `.env` and set your LLM key:
+To interact with the AI Campus Assistant, copy `.env.example` to `.env` and set your Gemini API key:
 
 ```bash
 cp .env.example .env
 ```
 
-See [`.env.example`](./.env.example) for the full list and what reads each one. No real keys are committed to this repository.
+| Key | Required | Default | Description |
+|---|---|---|---|
+| `GOOGLE_API_KEY` | For agent | — | Google AI Studio API key (also accepts `GEMINI_API_KEY`) |
+| `GEMINI_MODEL` | No | `gemini-3.5-flash` | Primary model with automatic fallback to `gemini-flash-latest`, `gemini-3.6-flash`, `gemini-3.7-flash` |
+
+No real API keys are committed to this repository.
+
+### How to use the AI Agent
+
+Navigate to **http://localhost:3000/chat** to interact with the CampusOS AI Assistant. The agent executes real-time database queries and tool calls across all five campus subsystems:
+
+- **Schedules:** *"When is my next CSE 3100 class?"* or *"Who teaches Web Engineering on Tuesday?"*
+- **Room Search & Booking:** *"Find me a free room for 10 people with a projector between 14:00 and 16:00"* or *"Book room 7A02 today from 15:00 to 16:30 for robotics club meeting"*.
+- **Event Registration:** *"What events are happening this week?"* or *"Register John Doe for the AUST CSE Carnival planning meeting"*.
+- **Announcements & Deadlines:** *"Show high priority announcements"* or *"What assignments are due in the next 3 days?"*.
+
+Every tool execution inspects live SQLite records and displays full traces (tool parameters, timing, and raw output) right below each response.
 
 ### API reference
 
