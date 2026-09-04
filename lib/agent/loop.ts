@@ -7,7 +7,10 @@ import { toolDeclarations, executeTool } from "./tools";
 import { buildSystemPrompt } from "./prompt";
 
 const MAX_ITERATIONS = 6;
-const MODEL = "gemini-3.6-flash";
+const FALLBACK_MODELS = [
+  process.env.GEMINI_MODEL || "gemini-3.7-flash",
+  "gemini-3.6-flash",
+];
 
 export interface AgentStepRecord {
   id: string;
@@ -24,26 +27,55 @@ export interface AgentResult {
   runId: string;
 }
 
-/** Call generateContent with exponential backoff on transient errors (503 / 429). */
+/** Call generateContent with automatic model fallback on quota / high demand (429 / 503). */
 async function generateContentWithRetry(
   ai: GoogleGenAI,
   params: Parameters<typeof ai.models.generateContent>[0],
-  maxRetries = 3,
 ) {
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
+  let lastError: unknown;
+  for (let i = 0; i < FALLBACK_MODELS.length; i++) {
+    const modelName = FALLBACK_MODELS[i];
     try {
-      return await ai.models.generateContent(params);
+      return await ai.models.generateContent({
+        ...params,
+        model: modelName,
+      });
     } catch (err: unknown) {
+      lastError = err;
       const status = (err as { status?: number })?.status;
-      if ((status === 503 || status === 429) && attempt < maxRetries - 1) {
-        const delay = 1500 * (attempt + 1);
-        await new Promise((r) => setTimeout(r, delay));
-      } else {
-        throw err;
+      if ((status === 429 || status === 503) && i < FALLBACK_MODELS.length - 1) {
+        console.log(
+          `[Fallback] ${modelName} returned ${status}. Trying next model ${FALLBACK_MODELS[i + 1]}...`,
+        );
+        continue;
       }
+      if (status === 429 || status === 503) {
+        // All models exhausted, parse retryDelay or wait 25s
+        let waitMs = 25000;
+        const errStr = String(err);
+        const match =
+          errStr.match(/retry in ([0-9.]+)s/i) ||
+          errStr.match(/"retryDelay":\s*"([0-9]+)s"/i);
+        if (match && match[1]) {
+          waitMs = Math.ceil(parseFloat(match[1]) * 1000) + 1500;
+        }
+        console.log(
+          `[Quota / ${status}] Waiting ${Math.round(waitMs / 1000)}s for quota to clear...`,
+        );
+        await new Promise((r) => setTimeout(r, waitMs));
+        try {
+          return await ai.models.generateContent({
+            ...params,
+            model: FALLBACK_MODELS[0],
+          });
+        } catch (retryErr) {
+          throw retryErr;
+        }
+      }
+      throw err;
     }
   }
-  throw new Error("Failed after retries");
+  throw lastError;
 }
 
 /** Run the agent loop: takes a conversation history, returns the final reply + tool steps. */
@@ -71,7 +103,7 @@ export async function runAgentLoop(
   for (let iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
     // Call the model with tool declarations and system instruction
     const response = await generateContentWithRetry(ai, {
-      model: MODEL,
+      model: FALLBACK_MODELS[0],
       contents,
       config: {
         systemInstruction: buildSystemPrompt(),
@@ -166,7 +198,7 @@ export async function runAgentLoop(
     });
 
     const finalResponse = await generateContentWithRetry(ai, {
-      model: MODEL,
+      model: FALLBACK_MODELS[0],
       contents,
       config: {
         systemInstruction: buildSystemPrompt(),

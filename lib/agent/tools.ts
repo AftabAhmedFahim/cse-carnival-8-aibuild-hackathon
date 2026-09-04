@@ -316,6 +316,12 @@ async function listRecords(input: Record<string, unknown>): Promise<unknown> {
 
 async function createRecord(input: Record<string, unknown>): Promise<unknown> {
   const system = input.system as string;
+  if (system === "schedules" || system === "announcements") {
+    throw new Error(
+      `Refused: Creating records in '${system}' is a dashboard-only administrative action and cannot be performed via chat.`,
+    );
+  }
+
   const data = { ...(input.data as Record<string, unknown>) };
   const delegate = getDelegate(system);
 
@@ -330,6 +336,12 @@ async function createRecord(input: Record<string, unknown>): Promise<unknown> {
 
 async function updateRecord(input: Record<string, unknown>): Promise<unknown> {
   const system = input.system as string;
+  if (system === "schedules" || system === "announcements") {
+    throw new Error(
+      `Refused: Updating records in '${system}' is a dashboard-only administrative action and cannot be performed via chat.`,
+    );
+  }
+
   const id = input.id as string;
   const data = { ...(input.data as Record<string, unknown>) };
   const delegate = getDelegate(system);
@@ -345,6 +357,12 @@ async function updateRecord(input: Record<string, unknown>): Promise<unknown> {
 
 async function deleteRecord(input: Record<string, unknown>): Promise<unknown> {
   const system = input.system as string;
+  if (system === "schedules" || system === "announcements") {
+    throw new Error(
+      `Refused: Deleting records in '${system}' is a dashboard-only administrative action and cannot be performed via chat.`,
+    );
+  }
+
   const id = input.id as string;
   const delegate = getDelegate(system);
 
@@ -402,14 +420,18 @@ async function bookRoom(input: Record<string, unknown>): Promise<unknown> {
   const endTime = input.endTime as string;
   const bookedBy = input.bookedBy as string;
 
-  // Verify the room exists
-  const room = await prisma.room.findUnique({ where: { id: roomId } });
-  if (!room) throw new Error(`Room not found with ID: ${roomId}`);
+  // Verify the room exists (check by id or roomNumber)
+  let room = await prisma.room.findUnique({ where: { id: roomId } });
+  if (!room) {
+    room = await prisma.room.findFirst({ where: { roomNumber: roomId } });
+  }
+  if (!room) throw new Error(`Room not found: ${roomId}`);
+  const actualRoomId = room.id;
 
   // Check for overlapping bookings
   const conflicting = await prisma.booking.findFirst({
     where: {
-      roomId,
+      roomId: actualRoomId,
       date,
       startTime: { lt: endTime },
       endTime: { gt: startTime },
@@ -425,7 +447,7 @@ async function bookRoom(input: Record<string, unknown>): Promise<unknown> {
 
   // Create the booking
   const booking = await prisma.booking.create({
-    data: { roomId, date, startTime, endTime, bookedBy },
+    data: { roomId: actualRoomId, date, startTime, endTime, bookedBy },
   });
 
   return {
@@ -463,12 +485,20 @@ async function registerEvent(input: Record<string, unknown>): Promise<unknown> {
   const eventId = input.eventId as string;
   const studentName = input.studentName as string;
 
-  const event = await prisma.event.findUnique({
+  let event = await prisma.event.findUnique({
     where: { id: eventId },
     include: { registrations: true },
   });
 
-  if (!event) throw new Error(`Event not found with ID: ${eventId}`);
+  if (!event) {
+    event = await prisma.event.findFirst({
+      where: { name: { contains: eventId } },
+      include: { registrations: true },
+    });
+  }
+
+  if (!event) throw new Error(`Event not found with ID or name: ${eventId}`);
+  const actualEventId = event.id;
 
   // Check capacity using the authoritative registered count
   if (event.registered >= event.capacity) {
@@ -480,10 +510,10 @@ async function registerEvent(input: Record<string, unknown>): Promise<unknown> {
   // Create registration and increment the registered count atomically
   const [registration] = await prisma.$transaction([
     prisma.registration.create({
-      data: { eventId, studentName },
+      data: { eventId: actualEventId, studentName },
     }),
     prisma.event.update({
-      where: { id: eventId },
+      where: { id: actualEventId },
       data: { registered: { increment: 1 } },
     }),
   ]);
@@ -492,10 +522,13 @@ async function registerEvent(input: Record<string, unknown>): Promise<unknown> {
     message: `Successfully registered ${studentName} for "${event.name}" on ${event.date}.`,
     registration: {
       id: registration.id,
-      eventId,
+      eventId: actualEventId,
       eventName: event.name,
       studentName,
-      currentRegistered: event.registered + 1,
+      registeredAt: registration.createdAt,
+    },
+    updatedEvent: {
+      registered: event.registered + 1,
       capacity: event.capacity,
     },
   };
