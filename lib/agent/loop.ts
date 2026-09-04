@@ -14,6 +14,7 @@ export interface AgentStepRecord {
   toolName: string;
   input: string;
   output: string;
+  durationMs?: number;
   createdAt: Date;
 }
 
@@ -104,6 +105,7 @@ export async function runAgentLoop(
       let toolOutput: unknown;
       let isError = false;
 
+      const startTime = Date.now();
       try {
         toolOutput = await executeTool(fc.name!, toolInput);
       } catch (error) {
@@ -112,6 +114,7 @@ export async function runAgentLoop(
           error: error instanceof Error ? error.message : String(error),
         };
       }
+      const durationMs = Date.now() - startTime;
 
       const outputStr = JSON.stringify(toolOutput, null, 2);
       const truncatedOutput =
@@ -134,6 +137,7 @@ export async function runAgentLoop(
         toolName: step.toolName,
         input: step.input,
         output: step.output,
+        durationMs,
         createdAt: step.createdAt,
       });
 

@@ -1,13 +1,13 @@
 // Agent tool definitions — each function queries live campus data via Prisma.
 // Tool schemas use the Google GenAI Type enum for schema definitions.
-import { Type } from "@google/genai";
+import { Type, type FunctionDeclaration } from "@google/genai";
 import { prisma, parseEquipment, hasAllEquipment, serializeEquipment } from "@/lib/db";
 
 // ---------------------------------------------------------------------------
 // Tool JSON schemas for the Gemini API (FunctionDeclaration format)
 // ---------------------------------------------------------------------------
 
-export const toolDeclarations = [
+export const toolDeclarations: FunctionDeclaration[] = [
   {
     name: "list_records",
     description:
