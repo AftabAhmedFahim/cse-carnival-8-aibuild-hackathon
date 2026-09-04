@@ -80,21 +80,79 @@ export default function ChatPanel() {
     }
   };
 
+  const handleClearHistory = () => {
+    if (isLoading) return;
+    setMessages([]);
+  };
+
   return (
-    <div className="flex-1 flex flex-col max-w-4xl w-full mx-auto">
-      <MessageList
-        messages={messages}
-        onSelectSuggestion={(prompt) => {
-          setInput(prompt);
-          handleSendMessage(prompt);
-        }}
-      />
-      <ChatInput
-        input={input}
-        setInput={setInput}
-        onSend={() => handleSendMessage()}
-        isLoading={isLoading}
-      />
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      {/* Header */}
+      <header className="border-b border-[rgba(255,255,255,0.08)] bg-[#0d0d0d]/80 backdrop-blur-md sticky top-0 z-20">
+        <div className="max-w-4xl mx-auto px-4 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center font-bold text-sm shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
+              AI
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-base font-semibold text-white tracking-tight">
+                  CampusOS Agent
+                </h1>
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Live DB
+                </span>
+              </div>
+              <p className="text-xs text-[#8e8e8e]">
+                Autonomous tool calling over campus schedules, rooms, events &amp; assignments
+              </p>
+            </div>
+          </div>
+
+          {messages.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              disabled={isLoading}
+              className="text-xs text-[#8e8e8e] hover:text-white bg-[#28282a] border border-[rgba(255,255,255,0.08)] px-3 py-1.5 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.16)]"
+              title="Clear conversation"
+            >
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              <span>Clear</span>
+            </button>
+          )}
+        </div>
+      </header>
+
+      {/* Main chat layout */}
+      <main className="flex-1 flex flex-col max-w-4xl w-full mx-auto">
+        <MessageList
+          messages={messages}
+          onSelectSuggestion={(prompt) => {
+            setInput(prompt);
+            handleSendMessage(prompt);
+          }}
+        />
+
+        <ChatInput
+          input={input}
+          setInput={setInput}
+          onSend={() => handleSendMessage()}
+          isLoading={isLoading}
+        />
+      </main>
     </div>
   );
 }
