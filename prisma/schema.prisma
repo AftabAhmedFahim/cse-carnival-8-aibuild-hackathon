@@ -1,11 +1,208 @@
-// Prisma schema — datasource + generator only at this stage.
-// Models land in MILESTONE 2.
+// CampusOS — Prisma schema
+// =============================================================================
+// Source of truth for field names and types: schema/schema.md
+//
+// Two conventions used throughout:
+//
+//  1. Prisma/TypeScript fields are camelCase (idiomatic, and what the API and
+//     the agent tool schemas expose), while the underlying SQLite COLUMN keeps
+//     the exact snake_case name from schema.md via @map.
+//     So schema.md `start_time` is `startTime` in code and `start_time` in the
+//     database. Nothing was renamed semantically.
+//
+//  2. The seed JSON nests bookings inside rooms and registrations inside
+//     events. Those become real tables with foreign keys (see Booking and
+//     Registration below), because the dashboard and the agent both need to
+//     create and cancel them individually.
+// =============================================================================
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
+  // Hardcoded rather than env("DATABASE_URL") on purpose: a fresh clone must
+  // run `npm install && npx prisma migrate dev --name init && npm run seed &&
+  // npm run dev` with no .env file present. The DB lands at prisma/dev.db.
   provider = "sqlite"
   url      = "file:./dev.db"
+}
+
+// =============================================================================
+// 1. SCHEDULE — data/schedules.json (24 records)
+// =============================================================================
+
+model Schedule {
+  id        String @id @default(cuid())
+  course    String
+  title     String
+  day       String // "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday"
+  startTime String @map("start_time") // 24h "HH:MM"
+  endTime   String @map("end_time") // 24h "HH:MM"
+
+  // Room NUMBER as a plain string ("7A07"), NOT a foreign key to Room.
+  // schema.md types this as a string, so it stays one. Join on Room.roomNumber
+  // if you need the full room record.
+  room String
+
+  instructor String
+  section    String // "B", "B1/B2", "CS", "DWM", "CSGr-1", "DWMGr-1"
+
+  @@index([day])
+  @@index([course])
+}
+
+// =============================================================================
+// 2. ROOM — data/rooms.json (20 records)
+// =============================================================================
+
+model Room {
+  id         String @id @default(cuid())
+  roomNumber String @unique @map("room_number") // "7A03", "7B06" — unique, used to look a room up by name
+  type       String // "classroom" | "lab" | "seminar"
+  capacity   Int
+
+  // EQUIPMENT IS STORED AS A JSON STRING, e.g. ["whiteboard","projector","AC"]
+  // -------------------------------------------------------------------------
+  // schema.md types this as string[], but SQLite has no array or JSON column
+  // type, so Prisma cannot express String[] on this provider. We serialise the
+  // array with JSON.stringify on write and JSON.parse on read.
+  // ALWAYS go through parseEquipment() / serializeEquipment() in lib/db.ts —
+  // never hand this raw string to the UI or to the agent.
+  equipment String
+
+  floor  Int
+  status String // "available" | "unavailable"
+
+  bookings Booking[]
+
+  @@index([type])
+  @@index([capacity])
+}
+
+// -----------------------------------------------------------------------------
+// Booking — flattened out of rooms[].bookings[] in the seed JSON.
+// schema.md `booking_id` becomes this table primary key `id`.
+// -----------------------------------------------------------------------------
+
+model Booking {
+  id        String   @id @default(cuid()) // seed supplies "bk-001"; API-created rows get a cuid
+  roomId    String   @map("room_id")
+  bookedBy  String   @map("booked_by")
+  date      String // ISO date "YYYY-MM-DD" — required: a booking with no day cannot be conflict-checked
+  startTime String   @map("start_time") // 24h "HH:MM"
+  endTime   String   @map("end_time") // 24h "HH:MM"
+  purpose   String? // optional: the seed has it, the book endpoint may omit it
+  createdAt DateTime @default(now()) @map("created_at")
+
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  // Overlap checks filter on (roomId, date) first, then compare the "HH:MM"
+  // strings lexicographically — valid because they are zero-padded 24h times.
+  @@index([roomId, date])
+  @@index([roomId])
+}
+
+// =============================================================================
+// 3. EVENT — data/events.json (7 records)
+// =============================================================================
+
+model Event {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  date        String // start date "YYYY-MM-DD"
+  startTime   String @map("start_time") // 24h "HH:MM"
+  endTime     String @map("end_time") // 24h "HH:MM"
+  endDate     String @map("end_date") // end date; same as `date` for single-day events
+
+  // Room NUMBER as a plain string ("7C01"), NOT a foreign key to Room — same
+  // reasoning as Schedule.room.
+  venue String
+
+  organizer String
+  capacity  Int
+
+  // AUTHORITATIVE registration count, and it is NOT registrations.length.
+  // The seed has evt-001 at registered=47 with only 3 named registrations —
+  // the rest are anonymous. Capacity checks MUST compare `registered` against
+  // `capacity`, and registering MUST increment this field.
+  registered Int
+
+  status String // "upcoming" | "ongoing" | "completed" | "cancelled" | "full"
+
+  registrations Registration[]
+
+  @@index([date])
+  @@index([status])
+}
+
+// -----------------------------------------------------------------------------
+// Registration — flattened out of events[].registrations[] in the seed JSON.
+// The nested objects carry no id of their own, so every row gets a cuid.
+// -----------------------------------------------------------------------------
+
+model Registration {
+  id          String   @id @default(cuid())
+  eventId     String   @map("event_id")
+  studentName String   @map("student_name") // schema.md calls this `name` on the nested object
+  studentId   String?  @map("student_id") // campus ID like "20-40532" — NOT a foreign key
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
+
+// =============================================================================
+// 4. ANNOUNCEMENT — data/announcements.json (8 records)
+// =============================================================================
+
+model Announcement {
+  id       String @id @default(cuid())
+  title    String
+  body     String
+  date     String // posted date "YYYY-MM-DD"
+  priority String // "high" | "medium" | "low"
+  postedBy String @map("posted_by")
+  expires  String // "YYYY-MM-DD" — notice is stale after this date
+
+  @@index([priority])
+  @@index([date])
+}
+
+// =============================================================================
+// 5. ASSIGNMENT — data/assignments.json (8 records)
+// =============================================================================
+
+model Assignment {
+  id                 String @id @default(cuid())
+  course             String
+  courseTitle        String @map("course_title")
+  title              String
+  description        String
+  assignedDate       String @map("assigned_date") // "YYYY-MM-DD"
+  deadline           String // "YYYY-MM-DD"
+  submissionPlatform String @map("submission_platform")
+  status             String // "pending" | "submitted" | "graded" | "late"
+  marks              Int
+
+  @@index([deadline])
+  @@index([course])
+}
+
+// =============================================================================
+// AGENT TRACE — not part of schema.md. Person C persists one row per tool call
+// so the chat UI can show what the agent actually did.
+// =============================================================================
+
+model AgentStep {
+  id        String   @id @default(cuid())
+  runId     String   @map("run_id") // groups the steps of a single chat turn
+  toolName  String   @map("tool_name")
+  input     String // JSON.stringify of the tool arguments
+  output    String // JSON.stringify of the tool result, or the error message
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([runId])
 }
